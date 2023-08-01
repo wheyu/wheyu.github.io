@@ -141,15 +141,8 @@
   body {
     display: flex;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.6;
-  }
-
-  #content {
-    max-width: 860px;
-    width: 60%;
-    margin-top: 60px;
-    padding: 0px 30px 30px 30px;
   }
 
   .showclick {
@@ -159,10 +152,172 @@
     border-radius: 5px;
   }
 
+
+  #header {
+    position: fixed;
+  }
+
+  #header li {
+    float: left;
+    background: #30A6E6;
+    color: #FFF;
+    font-size: 26px;
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+    cursor: default;
+  }
+
+  #header li:hover,
+  #toolList li,
+  #articleList li {
+    background: #1d648a;
+  }
+
+  #toolList li:hover,
+  #articleList li:hover {
+    background: #c07326;
+  }
+
+  #header li a {
+    text-decoration: none;
+    color: white;
+  }
+
+  #header ul {
+    padding-left: 0em;
+  }
+
+  #toolList li,
+  #articleList li {
+    float: none;
+  }
+
+  #content {
+    max-width: 860px;
+    width: 60%;
+    margin-top: 60px;
+    padding: 0px 30px 30px 30px;
+  }
+
+
+  /* md 样式修改 */
+  #content p {
+    padding-left: 1em;
+    margin: 0.5em 0em 0em 0em;
+  }
+
+
+
+  /* 标题 */
+  h1 {
+    font-size: 2.6em;
+  }
+
+  h2 {
+    font-size: 2.2em;
+  }
+
+  h3 {
+    font-size: 1.9em;
+  }
+
+  h4 {
+    font-size: 1.6em;
+  }
+
+  h5 {
+    font-size: 1.3em;
+  }
+
+  h6 {
+    font-size: 1em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0.5em 0 0 0;
+  }
+
+  /* 列表 */
+  #content ul li::before {
+    content: "";
+    background-color: gray;
+    border: solid 1px gray;
+    border-radius: 50%;
+    display: inline-block;
+    height: 0.5em;
+    width: 0.5em;
+    margin-right: 0.5em;
+  }
+
+  #content li ul li::before {
+    background-color: white;
+  }
+
+  #content li {
+    margin: 0.5em 0 0 0;
+  }
+
+  /* 分隔线 */
+  hr {
+    margin: 0.5em 0px;
+  }
+
+  /* 代码字段 */
+  code {
+    color: red;
+    font-weight: 600;
+    font-size: 1.1em;
+    background-color: #eee;
+    padding: 0.2em 0.3em;
+    margin: 0.1em;
+  }
+
+  /* 代码块 */
+  pre {
+    border-radius: 5px;
+    padding: 0.5em;
+    margin: 0.5em 0 0 1em;
+    background-color: #f4f4f4;
+    border: solid 1px lightgray;
+    color: white;
+  }
+  pre code {
+    color: black;
+    font-size: 1.2em;
+    background-color: transparent;
+    padding: 0;
+    margin: 0em;
+  }
+
+
+
+  /* 区块 */
+
+  blockquote {
+    margin-left: 1em;
+    margin-top: 0.5em;
+    border-left: 4px solid #c2c2c2;
+    color: #777;
+  }
+
+  /* 表格 */
   table {
     border-collapse: collapse;
-    width: 100%;
+    width: calc(100% - 1em);
     text-align: left;
+    margin: 1em 0em 0em 1em;
   }
 
   table tr:nth-child(2n),
@@ -187,60 +342,13 @@
     font-weight: bold;
   }
 
-  pre {
-    border-radius: 5px;
-    padding: 5px 4px 5px 10px;
-    font-size: 1.2em;
-    background-color: #2d2d2d;
-    color: white;
+  ol {
+    margin-left: 2em;
   }
 
   ul {
     list-style: none;
-    padding-left: 1rem;
-  }
-
-  #header {
-    position: fixed;
-  }
-
-  #header li {
-    float: left;
-    background: #30A6E6;
-    color: #FFF;
-    font-size: 26px;
-    width: 150px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
-    -ms-transition: all .25s ease;
-    -o-transition: all .25s ease;
-    transition: all .25s ease;
-    cursor: default;
-  }
-
-  #header li:hover,
-  #toolList li,#articleList li {
-    background: #1d648a;
-  }
-
-  #toolList li:hover, #articleList li:hover {
-    background: #c07326;
-  }
-
-  #header li a {
-    text-decoration: none;
-    color: white;
-  }
-
-  #header ul {
-    padding-left: 0rem;
-  }
-
-  #toolList li, #articleList li {
-    float: none;
+    padding-left: 1em;
   }
 </style>
 
