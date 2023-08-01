@@ -1,0 +1,502 @@
+<head>
+    <meta charset="UTF-8">
+    <title>图片转ASCII</title>
+    <style>
+        #container {
+            /* border: 2px solid #aaa7; */
+            width: 70px;
+            height: 22;
+            font-size: 15px;
+            border-radius: 5px;
+            background-color: #aaa7;
+            color: #000;
+            text-align: center;
+            padding: 0px 2px 0px 2px;
+            display: inline-block;
+        }
+        
+        #file {
+            opacity: 0;
+            width: 0px;
+        }
+        
+        #upImg {
+            padding: 0px 5px 3px 5px;
+            /* border: 2px solid lightgreen; */
+            border-radius: 5px;
+            background: #aaa7;
+            display: inline-block;
+        }
+        
+        #colorType {
+            height: 24px;
+            border-radius: 5px;
+            border: 2px solid #666;
+            width: 64px;
+        }
+        
+        #showType {
+            height: 24px;
+            border-radius: 5px;
+            border: 2px solid #666;
+            width: 80px;
+        }
+        
+        #saveType {
+            height: 24px;
+            border-radius: 5px;
+            border: 2px solid #666;
+            width: 60px;
+        }
+        
+        #imageType {
+            height: 24px;
+            border-radius: 5px;
+            border: 2px solid #666;
+            width: 50px;
+        }
+        
+        #deepBGColor {
+            height: 24px;
+            border-radius: 5px;
+            border: 2px solid #666;
+            width: 50px;
+        }
+        
+        .inputNum {
+            width: 23px;
+            height: 24px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        #resultImage {
+            width: 100%;
+        }
+    </style>
+</head>
+<div>
+    <div id="funcBtn">
+        <div id="container">
+            拖入图片
+        </div>
+        <input id="file" class="filepath" onchange="changepic(this)" type="file" accept="image/png, image/jpeg, image/jpg">
+        <label id="upImg" for="file" class='btn btn-success'>点击选择</label>
+
+        <input id="scale" class="inputNum" value="2">
+        <input id="numScale" class="inputNum" value="4">
+
+        <select id="colorType" onchange="selectChange(this)">
+            <option value="color">彩色</option>
+            <option value="noColor">黑白</option>
+          </select>
+        <select id="showType" onchange="selectChange(this)">
+              <option value="1">爱心</option>
+              <option value="2">文字</option>
+              <option value="3">字符串</option>
+            </select>
+        <select id="imageType" onchange="selectChange(this)">
+                  <option value="png">png</option>
+                  <option value="jpeg">jpeg</option>
+                </select>
+        <select id="saveType" onchange="selectChange(this)">
+              <option value="0.8">高</option>
+              <option value="0.6">中</option>
+              <option value="0.3">低</option>
+              <option value="1.0">极高</option>
+            </select>
+        <select id="deepBGColor" onchange="selectChange(this)">
+                  <option value="0.61">中</option>
+                  <option value="0.41">浅</option>
+                  <option value="0.81">深</option>
+                  <option value="0.99">深+</option>
+                </select>
+        <button onclick="refresh()">刷新</button>
+        <button id="dlBtn" onclick="saveAsLocalImage()">保存</button>
+    </div>
+</div>
+<canvas id="canvas"></canvas>
+<image id="resultImage" onclick="changeStyle(this)"></image>
+<script>
+    var imgData = null;
+
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    var scale = 2;
+    var numScale = 4;
+    var color = "color"
+    var showType = 1;
+    var saveType = "0.8"
+    var imageType = "png"
+    var deepBGColor = "0.61"
+
+    /*拖拽的目标对象------ document 监听drop 并防止浏览器打开客户端的图片*/
+    document.ondragover = function(e) {
+        e.preventDefault(); //只有在ondragover中阻止默认行为才能触发 ondrop 而不是 ondragleave
+    };
+    document.ondrop = function(e) {
+        e.preventDefault(); //阻止 document.ondrop的默认行为  *** 在新窗口中打开拖进的图片
+    };
+    /*拖拽的源对象----- 客户端的一张图片 */
+    /*拖拽目标对象-----div#container  若图片释放在此元素上方，则需要在其中显示*/
+    container.ondragover = function(e) {
+        e.preventDefault();
+    };
+    container.ondrop = function(e) {
+        var list = e.dataTransfer.files;
+        for (var i = 0; i < list.length; i++) {
+            var f = list[i];
+            reader(f);
+        }
+    };
+
+    function changeStyle(el) {
+        console.log("el.style.width ", el.style.width)
+        if (el.style.width == "auto") {
+            el.style.width = "100%"
+        } else {
+            el.style.width = "auto"
+        }
+    }
+
+    function refresh() {
+        imgData && reader(imgData);
+        // canvas.width = 0
+    }
+
+    function selectChange(el) {
+        switch (el.value) {
+            case "1":
+            case "2":
+            case "3":
+                showType = parseInt(el.value)
+                break;
+            case "png":
+            case "jpeg":
+                imageType = el.value
+                break;
+            case "1.0":
+            case "0.3":
+            case "0.6":
+            case "0.8":
+                saveType = parseFloat(el.value)
+                break;
+            case "Color":
+            case "noColor":
+                colorType = el.value
+                break;
+            case "0.61":
+            case "0.41":
+            case "0.81":
+            case "0.99":
+                deepBGColor = el.value
+        }
+        refreshUI(true);
+    }
+
+    function refreshUI(hideDl) {
+        document.getElementById("saveType").disabled = imageType == "png"
+        showType == "1" || showType == "2" && (document.getElementById("colorType")[0].selected = "彩色")
+        document.getElementById("colorType").disabled = showType != "3"
+        document.getElementById("dlBtn").disabled = !!hideDl
+    }
+
+    function reader(f) {
+        if (!f) {
+            return;
+        }
+        document.getElementById("funcBtn").disabled = true
+        document.getElementById("funcBtn").style.opacity = 0.4
+        scale = parseFloat(document.getElementById("scale").value || 2)
+        numScale = parseFloat(document.getElementById("numScale").value || 4)
+        color = document.getElementById("colorType").value
+        showType = document.getElementById("showType").value
+        imageType = document.getElementById("imageType").value
+        console.log("====input  ", imageType, showType, color, scale, numScale, imgData)
+        var reader = new FileReader();
+        reader.readAsDataURL(f);
+        reader.onload = function() {
+            var img = new Image();
+            img.src = reader.result;
+            imgData = f;
+            img.onload = function() {
+                switch (showType) {
+                    case "1":
+                        invertheart(this)
+                        break;
+                    case "2":
+                        invertWord(this)
+                        break;
+                    case "3":
+                        invert(this)
+                        break;
+                    default:
+                        invertheart(this)
+                        break;
+                }
+
+                document.getElementById("funcBtn").style.opacity = 1
+                document.getElementById("funcBtn").disabled = false
+                document.getElementById("dlBtn").disabled = false
+            }
+
+        }
+    }
+
+    function changepic() {
+        var reads = new FileReader();
+        f = document.getElementById('file').files[0];
+
+        reader(f);
+    }
+    //颜色转换
+    function hexify(color) { //'255,232,186'
+        var values = color
+            .replace(/rgba?\(/, '')
+            .replace(/\)/, '')
+            .replace(/[\s+]/g, '')
+            .split(',');
+        var a = parseFloat(values[3] || 1),
+            r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
+            g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
+            b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
+        return "#" +
+            ("0" + r.toString(16)).slice(-2) +
+            ("0" + g.toString(16)).slice(-2) +
+            ("0" + b.toString(16)).slice(-2);
+    }
+
+    //    汉字
+    function invertWord(img) {
+        // scale = 3
+        // numScale = 3;
+        var imgW = img.width
+        var imgH = img.height
+        canvas.width = imgW * scale
+        canvas.height = imgH * scale
+        context.drawImage(img, 0, 0);
+        //获取图片对象以及元素点的数组
+        var img1 = context.getImageData(0, 0, imgW, imgH);
+        var data = img1.data;
+        canvas.width = imgW * scale
+            // context.rect(0, 0, imgW, imgH)
+            // context.fillStyle = "#fff0";
+            // context.fill();
+            // return
+            // console.log("==== data ", data)
+            // return
+            // 设置字体
+        context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
+            // 设置颜色
+        context.fillStyle = "#fff";
+        // 设置水平对齐方式
+        context.textAlign = "center";
+        // 设置垂直对齐方式
+        context.textBaseline = "middle";
+
+        //A
+        var arr = ["一", "夜", "暴", "富"]
+            // arr = ["1", "8", "5", "5", "2", "6", "6", "1", "6", "8", "9"]
+        var result = [];
+        var height = scale * numScale / 2;
+        var width = 0;
+        var count = 0;
+        for (var i = 0, len = data.length; i < len; i += 4 * numScale) {
+            var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            var sum = 0;
+            var r = 0;
+            var g = 0;
+            var b = 0;
+            for (var j = 0; j < numScale; j++) {
+                r += data[i + j * 4] || data[i]
+                g += data[i + 1 + j * 4] || data[i + 1]
+                b += data[i + 2 + j * 4] || data[i + 2]
+            }
+            r /= numScale
+            g /= numScale
+            b /= numScale
+
+
+            context.fillStyle = hexify(r + "," + g + "," + b + "," + deepBGColor); //"#F00";
+            context.fillRect(width - numScale * scale / 2, height - numScale * scale / 2, numScale * scale, numScale * scale);
+
+
+
+            context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
+            context.fillStyle = hexify(r + "," + g + "," + b);
+            // 设置水平对齐方式
+            context.fillText(arr[count % arr.length], width, height);
+            width += 1 * scale * numScale;
+            if (i % (4 * imgW * numScale) == 0 && i != 0) {
+                height += 1 * scale * numScale;
+                width = 0;
+            }
+            count++;
+        }
+
+        document.getElementById("resultImage").src = canvas.toDataURL("image/" + imageType, parseFloat(saveType || "0.8"));
+
+        canvas.height = 0
+        console.log("=========== count  ", count)
+    }
+    //    爱心
+    function invertheart(img) {
+        // scale = 1;
+        // numScale = 4
+        var imgW = img.width
+        var imgH = img.height
+        canvas.width = imgW * scale
+        canvas.height = imgH * scale
+        context.drawImage(img, 0, 0);
+        //获取图片对象以及元素点的数组
+        var img1 = context.getImageData(0, 0, imgW, imgH);
+        var data = img1.data;
+        canvas.width = imgW * scale
+            // console.log("==== data ", data)
+            // return
+            // 设置字体
+        context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
+            // 设置颜色
+        context.fillStyle = "#000";
+        // 设置水平对齐方式
+        context.textAlign = "center";
+        // 设置垂直对齐方式
+        context.textBaseline = "middle";
+
+        var arr = ["❤", "❤"]
+        var result = [];
+        var height = scale * numScale / 2;
+        var width = 0;
+        var count = 0;
+        for (var i = 0, len = data.length; i < len; i += 4 * numScale) {
+            var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            var sum = 0;
+            // var r = 0;
+            // var g = 0;
+            // var b = 0;
+            for (var j = 0; j < numScale; j++) {
+                sum += data[i + j * 4] + data[i + 1 + j * 4] + data[i + 2 + j * 4]
+            }
+            var r = data[i]
+            var g = data[i + 1]
+            var b = data[i + 2]
+            avg = sum / (3 * numScale)
+            var num = Math.floor(avg / (Math.floor(256 / arr.length) + 1));
+
+            context.fillStyle = hexify(r + "," + g + "," + b + "," + deepBGColor); //"#F00";
+            context.fillRect(width - numScale * scale / 2, height - numScale * scale / 2, numScale * scale, numScale * scale);
+
+
+            context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
+            context.fillStyle = hexify(r + "," + g + "," + b);
+            // 设置水平对齐方式
+            context.fillText(arr[num], width, height);
+            width += 1 * scale * numScale;
+            if (i % (4 * imgW * numScale) == 0 && i != 0) {
+                height += 1 * scale * numScale;
+                width = 0;
+            }
+            count++;
+        }
+
+        document.getElementById("resultImage").src = canvas.toDataURL("image/" + imageType, parseFloat(saveType || "0.8"));
+
+
+        canvas.height = 0
+        console.log("=========== count  ", count)
+    }
+    //    黑白 字符串
+    function invert(img) {
+        // scale = 2
+        // numScale = 3;
+        var imgW = img.width
+        var imgH = img.height
+        canvas.width = imgW * scale
+        canvas.height = imgH * scale
+        context.drawImage(img, 0, 0);
+        //获取图片对象以及元素点的数组
+        var img1 = context.getImageData(0, 0, imgW, imgH);
+        var data = img1.data;
+        canvas.width = imgW * scale
+            // console.log("==== data ", data)
+            // return
+            // 设置字体
+        context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
+            // 设置颜色
+        context.fillStyle = "#000";
+        // 设置水平对齐方式
+        context.textAlign = "center";
+        // 设置垂直对齐方式
+        context.textBaseline = "middle";
+
+        //A
+        var arr = ["M", "N", "H", "Q", "$", "O", "C", "?", "7", ">", "!", ":", "–", ".", " "];
+
+        var result = [];
+        var height = scale * numScale / 2;
+        var width = 0;
+        var count = 0;
+        for (var i = 0, len = data.length; i < len; i += 4 * numScale) {
+            var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            var sum = 0;
+            var r = 0;
+            var g = 0;
+            var b = 0;
+            for (var j = 0; j < numScale; j++) {
+                sum += data[i + j * 4] + data[i + 1 + j * 4] + data[i + 2 + j * 4]
+                r += data[i + j * 4] || data[i]
+                g += data[i + 1 + j * 4] || data[i + 1]
+                b += data[i + 2 + j * 4] || data[i + 2]
+            }
+            r /= numScale
+            g /= numScale
+            b /= numScale
+            avg = sum / (3 * numScale)
+
+            context.fillStyle = hexify(r + "," + g + "," + b + "," + deepBGColor); //"#F00";
+            if (color != "color") {
+                context.fillStyle = hexify(255 + "," + 255 + "," + 255 + "," + deepBGColor); //"#F00";
+            }
+            deepBGColor != "0.41" && context.fillRect(width - numScale * scale / 2, height - numScale * scale / 2, numScale * scale, numScale * scale);
+
+            var num = Math.floor(avg / (Math.floor(256 / arr.length) + 1));
+            context.fillStyle = hexify(data[i] + "," + data[i + 1] + "," + data[i + 2]);
+            if (color != "color") {
+                context.fillStyle = hexify(0 + "," + 0 + "," + 0 + "," + deepBGColor); //"#F00";
+                // context.fillStyle = "#000";
+            }
+            // 设置水平对齐方式
+            context.fillText(arr[num], width, height);
+            width += 1 * scale * numScale;
+            if (i % (4 * imgW * numScale) == 0 && i != 0) {
+                height += 1 * scale * numScale;
+                width = 0;
+            }
+            count++;
+        }
+
+        document.getElementById("resultImage").src = canvas.toDataURL("image/" + imageType, parseFloat(saveType || "0.8"));
+
+
+        canvas.height = 0
+
+        console.log("=========== count  ", count)
+    }
+
+    // 保存
+    function saveAsLocalImage() {
+        // var image = canvas.toDataURL("image/jpeg", parseFloat("0.6")).replace("image/jpeg", "image/octet-stream");
+        //window.location.href = image + "?name=ttt.jpeg"; // it will save locally 
+        var url = document.getElementById("resultImage").src
+        var a = document.createElement('a')
+        var event = new MouseEvent('click')
+
+        a.download = Date.now() || '图片名称'
+        a.href = url
+        console.log("========  save ",url)
+        a.dispatchEvent(event)
+    }
+
+    //
+    refreshUI(true)
+</script>

@@ -1,0 +1,36 @@
+{
+  "articleList":[
+    {
+      "path": "articles/jquery.md",
+      "name": "jquery",
+      "tag": [""]
+    },
+    {
+      "path": "articles/markdown.md",
+      "name": "markdown",
+      "tag": [""]
+    },
+    {
+      "path": "articles/web_share.md",
+      "name": "网站",
+      "tag": [""]
+    }
+  ],
+  "toolList":[
+    {
+      "name":"图片工具",
+      "path":"tools/imgToAscii.html",
+      "tag": ["图片","工具"]
+    },
+    {
+      "name":"m3u8播放",
+      "path":"tools/m3u8.html",
+      "tag": ["视频","在线"]
+    },
+    {
+      "name":"汉字转拼音",
+      "path":"tools/汉字转拼音.html",
+      "tag": ["文字"]
+    }
+  ]
+}

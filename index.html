@@ -1,159 +1,247 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>在线视频播放</title>
-    <script src="https://cdn.staticfile.org/dplayer/1.25.1/DPlayer.min.js"></script>
-    <script src="https://cdn.staticfile.org/hls.js/8.0.0-beta.3/hls.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/dplayer/1.25.0/DPlayer.min.css">
+  <meta charset="utf-8" />
+  <title>wheyu blog</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <div class="search-box">
-            <input id="video-url" /><button onclick="clickPlay()">播放</button>
-        </div>
-        <div id="video-box">
-        </div>
-    </div>
+  <div id="header">
+    <ul>
+      <li>主页</li>
+      <li class="article">文章
+        <ul id="articleList">
+        </ul>
+      </li>
+      <li class="tool">工具
+        <ul id="toolList">
+        </ul>
+      </li>
+      <li>关于</li>
+    </ul>
+  </div>
+  <div id="content"></div>
+  <script>
+    $(function () {
 
-    <style>
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-            padding: 0px;
-            margin: 0px;
+      var data = $.ajax({
+        url: 'data.json',//json文件位置，文件名
+        type: "GET",//请求方式为get
+        dataType: "json", //返回数据格式为json
+        async: false,
+        success: function (data) {//请求成功完成后要执行的方法
         }
-        
-        .search-box {
-            position: absolute;
-            z-index: 99999;
-            /* top: 10px; */
-            transition: all 1s;
-            width: 90%;
-            max-width: 1000px;
-            opacity: 0.01;
-        }
+      });
+      var obj = null
+      try {
+        obj = JSON.parse(data.responseText)
+      } catch (error) {
+      }
+      console.log("====== obj ", obj)
+      if (!obj) {
+        alert("获取数据出错")
+        return
+      }
 
-        .search-box:hover {
-            opacity: 0.8;
-        }
-        
-        input {
-            border: 1px solid #ccc;
-            padding: 7px 0px;
-            border-radius: 3px;
-            /*css3属性IE不支持*/
-            padding-left: 5px;
-            width: calc(100% - 70px);
-        }
-        
-        .search-box > button {
-            margin-left: 5px;
-            border: 1px solid #ccc;
-            padding: 5px 10px;
-            border-radius: 3px;
-            width: 50px;
-            /*css3属性IE不支持*/
-        }
-        
-        .video-js .vjs-tech {
-            position: relative !important;
-        }
-        
-        #app {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-        
-        #video-box {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #dplayer,#myVideo,
-        #outVideo,
-        #myVideo_MP4 {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-    <script>
-        function getUrlParam(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null)
-                return r[2];
-            return null; // 返回参数值
-        }
+      $("#toolList").children().remove()
+      obj.toolList.forEach(tool => {
+        $("#toolList").append(`<li><a target='_blank' href='${tool.path}'>${tool.name}</a></li>`)
+      });
 
-        var currentUrl = window.location.href;
-        var videoUrl = getUrlParam('url')
-        playVideo(videoUrl)
+      $("#articleList").children().remove()
+      obj.articleList.forEach(article => {
+        $("#articleList").append(`<li class='loadArticle' value='${article.path}'>${article.name}</li>`)
 
-        function clickPlay() {
-            var vDom = document.getElementById("video-url")
-            if (vDom) {
-                var videoUrl = vDom.value;
-                playVideo(videoUrl)
+        $('.loadArticle').click((event) => {
+          try {
+            var path = $(event.target).attr("value")
+            if (!path || path.length == 0) {
+              throw '无效地址'
             }
-        }
-
-        function initDplayer(video) {
-            var dp = new DPlayer({
-                container: document.getElementById('dplayer'),
-                screenshot: false, // 是否允许截图（按钮），点击可以自动将截图下载到本地
-                hotkey: true, // 是否支持热键，调节音量，播放，暂停等
-                preload: 'auto', // 自动预加载
-                volume: 0.7, // 初始化音量
-                autoplay: true,
-                video
+            a = $.ajax({
+              url: path,//json文件位置，文件名
+              type: "GET",//请求方式为get
+              dataType: "text", //返回数据格式为json
+              async: false,
+              success: function (data) {//请求成功完成后要执行的方法
+              }
             });
-            dp.on('error', function () {
-                alert("加载失败")
-            });
-            dp.on('ended', function () {
-            });
-        }
-
-        function playVideo(url, name) {
-            if(!url){
-                return;
-            }
-            document.getElementById("dplayer") && document.getElementById("dplayer").remove()
-            document.getElementById("outVideo") && document.getElementById("outVideo").remove()
-
-
-            if (!/\.(m3u8|mp4)$/g.test(url)) {
-                document.getElementById("video-box").innerHTML += `<iframe id="outVideo" src="${url}" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>`;
-                return
+            aa = a.responseText;
+            var htmlData = ""
+            console.log("=====  path  ", path)
+            if (path.indexOf('.md') >= 0) {
+              htmlData = marked.parse(aa);
             } else {
-                document.getElementById("video-box").innerHTML += `<div id="dplayer"></div>`;
-                var type = "auto";
-                if (/(\.m3u8$|rtsp\:)/g.test(url)) {
-                    type = "hls"
-                }
-                if (/\.mp4$/g.test(url)) {
-                    type = "normal"
-                }
+              htmlData = aa
             }
-            var initPlayerData = {
-                quality: [],
-                defaultQuality: 0,
-            }
+            console.log("=====  htmlData  ", htmlData)
+            document.getElementById('content').innerHTML = htmlData
 
-            initPlayerData.quality.push({ name: name || "HD", url, type });
-            initDplayer({url,type});
-        }
-    </script>
+            $('.showclick').click((event) => {
+              try {
+                var value = $(event.target).attr("value")
+                if (!value) {
+                  throw '错误'
+                }
+                if (value == '已解密') {
+                  return
+                }
+                var pwd = prompt("请输入密码", "");
+                if (pwd == null) {
+                  return
+                }
+                if (pwd.length == 0) {
+                  throw '密码不能为空'
+                }
+
+                // var encrypted = CryptoJS.AES.encrypt(value, pwd).toString();
+                var decrypted = CryptoJS.AES.decrypt(value, pwd).toString(CryptoJS.enc.Utf8);
+                if (decrypted.length == 0) {
+                  throw '解密错误'
+                }
+                $(event.target).text(decrypted)
+                $(event.target).attr("value", '已解密')
+              } catch (error) {
+                alert(error)
+              }
+            })
+          } catch (error) {
+            alert(error)
+          }
+        })
+
+      })
+
+      $('.tool').hover(() => {
+        $('#toolList').show();
+      }, () => {
+        $('#toolList').hide();
+      })
+      $('.article').hover(() => {
+        $('#articleList').show();
+      }, () => {
+        $('#articleList').hide();
+      })
+
+      $('#articleList').hide();
+      $('#toolList').hide();
+    });
+  </script>
 </body>
+<style>
+  * {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  #content {
+    max-width: 860px;
+    width: 60%;
+    margin-top: 60px;
+    padding: 0px 30px 30px 30px;
+  }
+
+  .showclick {
+    text-shadow: 1px 1px 2px #333;
+    font-size: 26px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+  }
+
+  table tr:nth-child(2n),
+  thead {
+    background-color: #f8f8f8;
+  }
+
+  tr,
+  td,
+  th {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+  }
+
+  td,
+  th {
+    padding: 6px 13px;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  pre {
+    border-radius: 5px;
+    padding: 5px 4px 5px 10px;
+    font-size: 1.2em;
+    background-color: #2d2d2d;
+    color: white;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 1rem;
+  }
+
+  #header {
+    position: fixed;
+  }
+
+  #header li {
+    float: left;
+    background: #30A6E6;
+    color: #FFF;
+    font-size: 26px;
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+    cursor: default;
+  }
+
+  #header li:hover,
+  #toolList li,#articleList li {
+    background: #1d648a;
+  }
+
+  #toolList li:hover, #articleList li:hover {
+    background: #c07326;
+  }
+
+  #header li a {
+    text-decoration: none;
+    color: white;
+  }
+
+  #header ul {
+    padding-left: 0rem;
+  }
+
+  #toolList li, #articleList li {
+    float: none;
+  }
+</style>
 
 </html>
