@@ -90,16 +90,6 @@
           fill="#FFFFFF" p-id="9040"></path>
       </svg>
     </div>
-    <!-- <ul>
-      <li class="article">文章
-        <ul id="articleList">
-        </ul>
-      </li>
-      <li class="tool">工具
-        <ul id="toolList">
-        </ul>
-      </li>
-    </ul> -->
   </div>
   <div id="content">
 
@@ -189,13 +179,18 @@
             for (let h2 of $('h2')) {
               let chapterId = $(h2).attr('id')
               $("#chapterList").append(`
-                <a class="toast-item" href='#${chapterId}'>${chapterId}</a>
+                <a class="toast-item chapterItem" value='#${chapterId}'>${chapterId}</a>
               `)
             }
             $('#chapterList').hide()
 
+            $('.chapterItem').click((event) => {
+              var toDomId = $(event.target).attr("value")
+              document.querySelector(toDomId).scrollIntoView(true)
+            })
+
+
             $('#chapters').click((event) => {
-              console.log("====chapters===  ")
               $('.mask').show(100)
               $('#chapterList').show(100)
             })
