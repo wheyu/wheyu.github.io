@@ -92,7 +92,9 @@
     </div>
   </div>
   <div id="content">
+    <div id="article-detail">
 
+    </div>
   </div>
   <div id="toast">
     <div id="articleList" class="toast-box">
@@ -121,7 +123,6 @@
         obj = JSON.parse(data.responseText)
       } catch (error) {
       }
-      console.log("====== obj ", obj)
       if (!obj) {
         alert("获取数据出错")
         return
@@ -129,13 +130,18 @@
 
 
       $('#articles').click((event) => {
-        $('.mask').show(100)
+        $('.mask').show(0)
         $('#articleList').show(100)
       })
 
       $('#tools').click((event) => {
-        $('.mask').show(100)
+        $('.mask').show(0)
         $('#toolList').show(100)
+      })
+
+      $('#chapters').click((event) => {
+        $('.mask').show(100)
+        $('#chapterList').show(100)
       })
 
       $("#toolList").empty()
@@ -145,7 +151,6 @@
 
       $("#articleList").empty()
       obj.articleList.forEach(article => {
-        console.log("===== article add ",article)
         $("#articleList").append(`<div class='loadArticle toast-item' value='${article.path}'>${article.name}</div>`)
 
         $('.loadArticle').click((event) => {
@@ -166,14 +171,12 @@
             $('#articleList').hide(100)
             aa = a.responseText;
             var htmlData = ""
-            console.log("=====  path  ", path)
             if (path.indexOf('.md') >= 0) {
               htmlData = marked.parse(aa);
             } else {
               htmlData = aa
             }
-            console.log("=====  htmlData  ", htmlData)
-            document.getElementById('content').innerHTML = htmlData
+            $("#content").html(htmlData)
 
             $("#chapterList").empty()
             for (let h2 of $('h2')) {
@@ -189,39 +192,39 @@
               document.querySelector(toDomId).scrollIntoView(true)
             })
 
-
-            $('#chapters').click((event) => {
-              $('.mask').show(100)
-              $('#chapterList').show(100)
-            })
             
             
             $('#content').show(100);
 
-            $('.showclick').click((event) => {
+            $('.decrypt').click((event) => {
               try {
                 var value = $(event.target).attr("value")
+                var jmType = $(event.target).attr("jmType") || 'html'
                 if (!value) {
                   throw '错误'
                 }
-                if (value == '已解密') {
-                  return
-                }
                 var pwd = prompt("请输入密码", "");
-                if (pwd == null) {
+                if (!pwd) {
                   return
                 }
                 if (pwd.length == 0) {
                   throw '密码不能为空'
                 }
 
-                // var encrypted = CryptoJS.AES.encrypt(value, pwd).toString();
                 var decrypted = CryptoJS.AES.decrypt(value, pwd).toString(CryptoJS.enc.Utf8);
                 if (decrypted.length == 0) {
                   throw '解密错误'
                 }
-                $(event.target).text(decrypted)
-                $(event.target).attr("value", '已解密')
+                $(event.target).off("click");
+                
+                $(event.target).html(marked.parse(decrypted))
+                // if(jmType == 'md') {
+                //   $(event.target).html(marked.parse(decrypted))
+                // } else {
+                //   $(event.target).html(decrypted)
+                // }
+                $(event.target).removeAttr("value")
+                $(event.target).removeClass("undecrypt")
               } catch (error) {
                 alert(error)
               }
@@ -344,14 +347,21 @@
   }
 
   #content {
-    max-width: 750px;
+    max-width: 720px;
+    min-width: 360px;
     padding: 0px 30px 30px 30px;
     margin: 20px 0px 20px 0px;
     border-radius: 8px;
     box-shadow: 0 1px 4px #aaa;
     width: 90%;
   }
+  #article-detail {
+  }
 
+  .undecrypt {
+    color: red;
+    font-size: 1.5rem;
+  }
 
   /* md 样式修改 */
   #content p {

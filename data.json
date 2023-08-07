@@ -3,17 +3,17 @@
     {
       "path": "articles/jquery.md",
       "name": "jquery",
-      "tag": [""]
+      "tag": ["教程"]
     },
     {
       "path": "articles/markdown.md",
       "name": "markdown",
-      "tag": [""]
+      "tag": ["教程"]
     },
     {
       "path": "articles/web_share.md",
       "name": "网站",
-      "tag": [""]
+      "tag": ["分享"]
     }
   ],
   "toolList":[
