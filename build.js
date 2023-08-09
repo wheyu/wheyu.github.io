@@ -22,9 +22,9 @@ async function DealWeb(){
     mdData += '\n\n' + `## ${webListName}`
     mdData += '\n' + `<div class='share-web'>`
     for (let webData of data.list) {
-      mdData += '\n' + `<div class='web-item' to='${webData.url}'>
+      mdData += '\n' + `<div class='web-item item' to='${webData.url}'>
       <img class='web-img' src='${webData.ico}'/>
-        <div class='web-detail'>
+        <div class='web-detail mg-l-1'>
         <a target='_blank'>${webData.name}</a>
         <div>${'⭐⭐⭐⭐⭐'.substr(0,webData.stars)}</div>
       </div>
@@ -69,7 +69,7 @@ async function DealArticle(fileName){
     let jmType = jmTypeList[index] || 'html'
     let jmInfo = jmInfoList[index] || '加密内容，点击查看'
     let encrypted = CryptoJS.AES.encrypt(value, pwd).toString();
-    originData = originData.replace(/<pwd[\d\D]+?\/jm>/,  `<div class='decrypt undecrypt' jmType='${jmType}' style='margin: 1rem;' value='${encrypted}'>${jmInfo}</div>`)
+    originData = originData.replace(/<pwd[\d\D]+?\/jm>/,  `<div class='decrypt undecrypt' jmType='${jmType}' value='${encrypted}'>${jmInfo}</div>`)
   })
   dataJSON.articleList.push({
     path: `${saveDir}/${fileName}`,

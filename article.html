@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>wheyu blog</title>
   <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
-  <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no">
@@ -171,6 +171,12 @@
             path && window.open(path);
           })
 
+          $('.soft-item').click(event => {
+            var dom = $(event.target)
+            let path = dom.attr('to')
+            path && window.open(path);
+          })
+
           $('.decrypt').click((event) => {
             try {
               var dom = $(event.target)
@@ -198,8 +204,11 @@
                 throw '解密错误'
               }
               dom.off("click");
-
-              dom.html(marked.parse(decrypted))
+              if(jmType == 'md') {
+                dom.html(marked.parse(decrypted))
+              } else {
+                dom.html(decrypted)
+              }
               dom.removeAttr("value")
               dom.removeClass("undecrypt")
             } catch (error) {
@@ -351,7 +360,7 @@
 
   .undecrypt {
     color: red;
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 
   /* 分享 */
@@ -362,6 +371,9 @@
   }
 
   .web-item {
+  }
+
+  .item {
     display: flex;
     padding: 0.5rem 1rem;
     border: solid 1px #a3a3a3;
@@ -371,9 +383,23 @@
     box-sizing: border-box;
     margin: 0.5rem;
     cursor: pointer;
+    flex-direction: column;
   }
 
-  .web-detail {
+  .soft-detail {
+    display: flex;
+  }
+
+  .soft-detail .decrypt + .decrypt {
+    margin-left: 1rem;
+  }
+
+  .soft-detail span {
+    /* border-bottom: solid gray 1px; */
+    margin-left: 1rem;
+  }
+
+  .mg-l-1 {
     margin-left: 1rem;
   }
 
@@ -382,7 +408,7 @@
     height: 4rem;
   }
 
-  .web-item a {
+  .item a {
     font-size: 1.5rem;
   }
 
@@ -459,7 +485,7 @@
   /* 代码字段 */
   code {
     color: #795548;
-    ;
+    white-space: pre-wrap;
     font-weight: 600;
     font-size: 1.1rem;
     background-color: #eee;
