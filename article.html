@@ -1,0 +1,540 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>wheyu blog</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no">
+
+  <script>
+    const WIDTH = 750
+    const resize = () => {
+      document.querySelector('html').style.fontSize = Math.min(20 * (window.innerWidth / WIDTH), 20) + 'px';
+    }
+    window.onresize = resize
+    resize()
+  </script>
+</head>
+
+<body>
+  <div id="header">
+    <div id="back">
+      <svg t="1691547287523" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+        p-id="5169" width="128" height="128">
+        <path
+          d="M336.457143 336.457143m-336.457143 0a336.457143 336.457143 0 1 0 672.914286 0 336.457143 336.457143 0 1 0-672.914286 0Z"
+          fill="#8CF6FB" p-id="5170"></path>
+        <path
+          d="M512 1024C229.668571 1024 0 794.331429 0 512S229.668571 0 512 0s512 229.668571 512 512-229.668571 512-512 512z m0-950.857143C269.165714 73.142857 73.142857 269.165714 73.142857 512s196.022857 438.857143 438.857143 438.857143 438.857143-196.022857 438.857143-438.857143S754.834286 73.142857 512 73.142857z"
+          fill="#3C2DCB" p-id="5171"></path>
+        <path
+          d="M640.731429 340.845714L469.577143 512l171.154286 171.154286c14.628571 14.628571 14.628571 38.034286 0 51.2-14.628571 14.628571-38.034286 14.628571-51.2 0L392.045714 538.331429c-14.628571-14.628571-14.628571-38.034286 0-51.2l196.022857-196.022858c14.628571-14.628571 38.034286-14.628571 51.2 0 14.628571 13.165714 14.628571 36.571429 1.462858 49.737143z"
+          fill="#D098FF" p-id="5172"></path>
+      </svg>
+    </div>
+    <div id="chapters">
+      <svg t="1690943332023" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+        p-id="11904" width="128" height="128">
+        <path
+          d="M91.89 238.457c-29.899 0-54.133 24.239-54.133 54.134 0 29.899 24.234 54.137 54.133 54.137s54.138-24.238 54.138-54.137c0-29.896-24.239-54.134-54.138-54.134z"
+          fill="#E5594F" p-id="11905"></path>
+        <path
+          d="M91.89 462.463c-29.899 0-54.133 24.239-54.133 54.139 0 29.895 24.234 54.133 54.133 54.133s54.138-24.238 54.138-54.133c0-29.9-24.239-54.139-54.138-54.139z"
+          fill="#C45FA0" p-id="11906"></path>
+        <path
+          d="M91.89 686.475c-29.899 0-54.133 24.237-54.133 54.133 0 29.899 24.234 54.138 54.133 54.138s54.138-24.238 54.138-54.138c0-29.896-24.239-54.133-54.138-54.133z"
+          fill="#F39A2B" p-id="11907"></path>
+        <path
+          d="M941.26 234.723H328.964c-28.867 0-52.263 23.4-52.263 52.268v3.734c0 28.868 23.396 52.269 52.263 52.269H941.26c28.869 0 52.269-23.401 52.269-52.269v-3.734c-0.001-28.868-23.4-52.268-52.269-52.268z"
+          fill="#F0D043" p-id="11908"></path>
+        <path
+          d="M941.26 682.74H328.964c-28.867 0-52.263 23.399-52.263 52.268v3.734c0 28.863 23.396 52.269 52.263 52.269H941.26c28.869 0 52.269-23.405 52.269-52.269v-3.734c-0.001-28.868-23.4-52.268-52.269-52.268z"
+          fill="#4A5699" p-id="11909"></path>
+        <path
+          d="M709.781 458.729H328.964c-28.867 0-52.263 23.4-52.263 52.269v3.734c0 28.873 23.396 52.269 52.263 52.269h380.817c28.866 0 52.271-23.396 52.271-52.269v-3.734c0.001-28.869-23.405-52.269-52.271-52.269z"
+          fill="#E5594F" p-id="11910"></path>
+      </svg>
+    </div>
+  </div>
+  <div id="content">
+  </div>
+  <div id="toast">
+    <div id="articleList" class="toast-box">
+    </div>
+    <div id="chapterList" class="toast-box">
+    </div>
+  </div>
+  <div class="mask"></div>
+  <script>
+    $(function () {
+      let url = window.location.href
+      console.log("======= url ", url)
+      let articlePath = ''
+      try {
+        articlePath = decodeURI(url.match(/(?<=title\=).*?(?=$|&)/g)[0])
+      } catch (error) {
+        articlePath = 'articles/error.md'
+      }
+      $('.toast-box').hide()
+      $('#content').hide()
+
+      var data = $.ajax({
+        url: 'data.json',//json文件位置，文件名
+        type: "GET",//请求方式为get
+        dataType: "json", //返回数据格式为json
+        async: false,
+        success: function (data) {//请求成功完成后要执行的方法
+        }
+      });
+      var obj = null
+      try {
+        obj = JSON.parse(data.responseText)
+      } catch (error) {
+      }
+      if (!obj) {
+        alert("获取数据出错")
+        return
+      }
+
+      LoadArticle(articlePath)
+
+      $('#chapters').click((event) => {
+        $('.mask').show(100)
+        $('#chapterList').show(100)
+      })
+
+      $('#back').click(() => {
+        window.history.go(-1)
+      })
+
+      $('.mask').click(() => {
+        $('.toast-box').hide(100)
+        $('.mask').hide(100)
+      })
+
+
+      function LoadArticle(path) {
+        try {
+          if (!path || path.length == 0) {
+            throw '无效地址'
+          }
+          a = $.ajax({
+            url: path,//json文件位置，文件名
+            type: "GET",//请求方式为get
+            dataType: "text", //返回数据格式为json
+            async: false,
+            success: function (data) {//请求成功完成后要执行的方法
+            }
+          });
+          $('.mask').hide(100)
+          $('#articleList').hide(100)
+          aa = a.responseText;
+          var htmlData = ""
+          if (path.indexOf('.md') >= 0) {
+            htmlData = marked.parse(aa);
+          } else {
+            htmlData = aa
+          }
+          $("#content").html(htmlData)
+
+          $("#chapterList").empty()
+          for (let h2 of $('h2')) {
+            let chapterId = $(h2).attr('id')
+            $("#chapterList").append(`
+                <a class="toast-item chapterItem" value='#${chapterId}'>${chapterId}</a>
+              `)
+          }
+          $('#chapterList').hide()
+
+          $('.chapterItem').click((event) => {
+            var toDomId = $(event.target).attr("value")
+            document.querySelector(toDomId).scrollIntoView(true)
+          })
+
+
+
+          $('#content').show(100);
+
+          $('.web-item').click((event) => {
+            var dom = $(event.target)
+            let times = 2;
+            //找到decrypt节点
+            while (!dom.attr('to') && times > 0) {
+              dom = dom.parent()
+              times -= 1
+            }
+            let path = dom.attr('to')
+            path && window.open(path);
+          })
+
+          $('.decrypt').click((event) => {
+            try {
+              var dom = $(event.target)
+              let times = 2;
+              //找到decrypt节点
+              while (!dom.attr('value') && times > 0) {
+                dom = dom.parent()
+                times -= 1
+              }
+              var value = dom.attr("value")
+              var jmType = dom.attr("jmType")
+              if (!value) {
+                throw '错误'
+              }
+              var pwd = prompt("请输入密码", "");
+              if (!pwd) {
+                return
+              }
+              if (pwd.length == 0) {
+                throw '密码不能为空'
+              }
+
+              var decrypted = CryptoJS.AES.decrypt(value, pwd).toString(CryptoJS.enc.Utf8);
+              if (decrypted.length == 0) {
+                throw '解密错误'
+              }
+              dom.off("click");
+
+              dom.html(marked.parse(decrypted))
+              dom.removeAttr("value")
+              dom.removeClass("undecrypt")
+            } catch (error) {
+              alert(error)
+            }
+          })
+
+        } catch (error) {
+          alert(error)
+        }
+      }
+    });
+  </script>
+</body>
+<style>
+  * {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  * {
+    scrollbar-width: 8px;
+    scrollbar-base-color: green;
+    scrollbar-track-color: red;
+    scrollbar-arrow-color: blue;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    line-height: 1.6;
+  }
+
+  a {
+    text-decoration: none;
+    /*去掉下划线*/
+    color: blue;
+    /* 继承父元素的颜色 */
+  }
+
+  .tag {
+    color: blue;
+    cursor: pointer;
+  }
+
+  #date+.tag::before {
+    content: '🔖 ';
+    margin-left: 2rem;
+  }
+
+  #date::before {
+    content: '📅 ';
+  }
+
+  .tag+.tag::before {
+    content: "、";
+  }
+
+  .toast-box {
+    z-index: 10000;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    border: solid 1px white;
+    border-radius: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    max-height: 80%;
+    overflow: auto;
+    width: 60%;
+    max-width: 600px;
+  }
+
+  .toast-item {
+    margin: 0.5rem;
+    background-color: #04bcf940;
+    padding: 0.5rem 0.5rem;
+    line-height: 1.4;
+    font-size: 2rem;
+    cursor: default;
+    border-radius: 0.5rem;
+    box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px, rgb(60 64 67 / 15%) 0px 2px 6px 2px;
+    text-decoration: none;
+    color: #333;
+    text-align: center;
+  }
+
+  .showclick {
+    text-shadow: 1px 1px 2px #333;
+    font-size: 26px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .mask {
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    position: fixed;
+    opacity: 0.5;
+    z-index: 999;
+    top: 0px;
+    left: 0px;
+    display: none;
+  }
+
+
+  #header {
+    width: 3rem;
+    left: 1rem;
+    top: 2rem;
+    border-radius: 0.3rem;
+    opacity: 0.6;
+    position: fixed;
+  }
+
+  #header svg {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  #header div+div {
+    margin-top: 1rem;
+  }
+
+  #content {
+    max-width: 720px;
+    min-width: 360px;
+    padding: 0px 30px 30px 30px;
+    margin: 20px 0px 20px 0px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px #aaa;
+    width: 90%;
+  }
+
+  .undecrypt {
+    color: red;
+    font-size: 1.5rem;
+  }
+
+  /* 分享 */
+  .share-web {
+    display: flex;
+    /* width: calc(100% - 30px); */
+    flex-wrap: wrap;
+  }
+
+  .web-item {
+    display: flex;
+    padding: 0.5rem 1rem;
+    border: solid 1px #a3a3a3;
+    border-radius: 0.5rem;
+    min-width: 10rem;
+    width: calc(50% - 1rem);
+    box-sizing: border-box;
+    margin: 0.5rem;
+    cursor: pointer;
+  }
+
+  .web-detail {
+    margin-left: 1rem;
+  }
+
+  .web-img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .web-item a {
+    font-size: 1.5rem;
+  }
+
+  /* md 样式修改 */
+  #content p {
+    padding-left: 1rem;
+    margin: 0.5rem 0rem 0rem 0rem;
+  }
+
+  li p {
+    display: contents;
+  }
+
+
+  /* 标题 */
+  h1 {
+    font-size: 2.6rem;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+  }
+
+  h3 {
+    font-size: 1.9rem;
+  }
+
+  h4 {
+    font-size: 1.6rem;
+  }
+
+  h5 {
+    font-size: 1.3rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0.5rem 0 0 0;
+  }
+
+  /* 列表 */
+  #content ul li::before {
+    content: "";
+    background-color: gray;
+    border: solid 1px gray;
+    border-radius: 50%;
+    display: inline-block;
+    height: 0.5rem;
+    width: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  #content li ul li::before {
+    background-color: white;
+  }
+
+  #content li {
+    margin: 0.5rem 0 0 0;
+  }
+
+  /* 分隔线 */
+  hr {
+    margin: 0.5rem 0px;
+  }
+
+  /* 代码字段 */
+  code {
+    color: #795548;
+    ;
+    font-weight: 600;
+    font-size: 1.1rem;
+    background-color: #eee;
+    padding: 0.2rem 0.3rem;
+    margin: 0.1rem;
+  }
+
+  /* 代码块 */
+  pre {
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin: 0.5rem 0 0 1rem;
+    background-color: #f4f4f4;
+    border: solid 1px lightgray;
+    color: white;
+  }
+
+  pre code {
+    color: black;
+    font-size: 1.2rem;
+    background-color: transparent;
+    padding: 0;
+    margin: 0rem;
+  }
+
+
+
+  /* 区块 */
+
+  blockquote {
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+    border-left: 4px solid #c2c2c2;
+    color: #777;
+  }
+
+  /* 表格 */
+  table {
+    border-collapse: collapse;
+    width: calc(100% - 1rem);
+    text-align: left;
+    margin: 1rem 0rem 0rem 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  table tr:nth-child(2n),
+  thead {
+    background-color: #f8f8f8;
+  }
+
+  tr,
+  td,
+  th {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+  }
+
+  td,
+  th {
+    padding: 6px 13px;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  ol {
+    margin-left: 2rem;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 1rem;
+  }
+</style>
+
+</html>

@@ -4,112 +4,40 @@
 <head>
   <meta charset="utf-8" />
   <title>wheyu blog</title>
-  <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
   <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no">
 
   <script>
     const WIDTH = 750
-    const mobileAdapter = () => {
-      let scale = screen.width / WIDTH
-      let content = `width=${WIDTH}, initial-scale=${scale}, maximum-scale=${scale}, minimum-scale=${scale}`
-      let meta = document.querySelector('meta[name=viewport]')
-      if (!meta) {
-        meta = document.createElement('meta')
-        meta.setAttribute('name', 'viewport')
-        document.head.appendChild(meta)
-      }
-      meta.setAttribute('content', content)
+    const resize = () => {
+      document.querySelector('html').style.fontSize = Math.min(20 * (window.innerWidth / WIDTH), 20) + 'px';
     }
-    mobileAdapter()
-    window.onorientationchange = mobileAdapter
+    window.onresize = resize
+    resize()
   </script>
 </head>
 
 <body>
   <div id="header">
-    <div id="articles">
-      <svg t="1690943703686" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        p-id="13171" width="128" height="128">
-        <path
-          d="M810.666667 170.666667m0 42.666666l0 0q0 42.666667-42.666667 42.666667l-256 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666666l256 0q42.666667 0 42.666667 42.666666Z"
-          fill="#516280" p-id="13172"></path>
-        <path
-          d="M981.333333 341.333333m0 42.666667l0 0q0 42.666667-42.666666 42.666667l-426.666667 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666667l426.666667 0q42.666667 0 42.666666 42.666667Z"
-          fill="#007BFC" p-id="13173"></path>
-        <path
-          d="M128 213.333333l0 170.666667 170.666667 0 0-170.666667-170.666667 0m0-85.333333l170.666667 0a85.333333 85.333333 0 0 1 85.333333 85.333333l0 170.666667a85.333333 85.333333 0 0 1-85.333333 85.333333l-170.666667 0a85.333333 85.333333 0 0 1-85.333333-85.333333l0-170.666667a85.333333 85.333333 0 0 1 85.333333-85.333333z"
-          fill="#516280" p-id="13174"></path>
-        <path
-          d="M810.666667 597.333333m0 42.666667l0 0q0 42.666667-42.666667 42.666667l-256 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666667l256 0q42.666667 0 42.666667 42.666667Z"
-          fill="#516280" p-id="13175"></path>
-        <path
-          d="M981.333333 768m0 42.666667l0 0q0 42.666667-42.666666 42.666666l-426.666667 0q-42.666667 0-42.666667-42.666666l0 0q0-42.666667 42.666667-42.666667l426.666667 0q42.666667 0 42.666666 42.666667Z"
-          fill="#007BFC" p-id="13176"></path>
-        <path
-          d="M128 640l0 170.666667 170.666667 0 0-170.666667-170.666667 0m0-85.333333l170.666667 0a85.333333 85.333333 0 0 1 85.333333 85.333333l0 170.666667a85.333333 85.333333 0 0 1-85.333333 85.333333l-170.666667 0a85.333333 85.333333 0 0 1-85.333333-85.333333l0-170.666667a85.333333 85.333333 0 0 1 85.333333-85.333333z"
-          fill="#516280" p-id="13177"></path>
-      </svg>
-    </div>
-    <div id="chapters">
-      <svg t="1690943332023" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        p-id="11904" width="128" height="128">
-        <path
-          d="M91.89 238.457c-29.899 0-54.133 24.239-54.133 54.134 0 29.899 24.234 54.137 54.133 54.137s54.138-24.238 54.138-54.137c0-29.896-24.239-54.134-54.138-54.134z"
-          fill="#E5594F" p-id="11905"></path>
-        <path
-          d="M91.89 462.463c-29.899 0-54.133 24.239-54.133 54.139 0 29.895 24.234 54.133 54.133 54.133s54.138-24.238 54.138-54.133c0-29.9-24.239-54.139-54.138-54.139z"
-          fill="#C45FA0" p-id="11906"></path>
-        <path
-          d="M91.89 686.475c-29.899 0-54.133 24.237-54.133 54.133 0 29.899 24.234 54.138 54.133 54.138s54.138-24.238 54.138-54.138c0-29.896-24.239-54.133-54.138-54.133z"
-          fill="#F39A2B" p-id="11907"></path>
-        <path
-          d="M941.26 234.723H328.964c-28.867 0-52.263 23.4-52.263 52.268v3.734c0 28.868 23.396 52.269 52.263 52.269H941.26c28.869 0 52.269-23.401 52.269-52.269v-3.734c-0.001-28.868-23.4-52.268-52.269-52.268z"
-          fill="#F0D043" p-id="11908"></path>
-        <path
-          d="M941.26 682.74H328.964c-28.867 0-52.263 23.399-52.263 52.268v3.734c0 28.863 23.396 52.269 52.263 52.269H941.26c28.869 0 52.269-23.405 52.269-52.269v-3.734c-0.001-28.868-23.4-52.268-52.269-52.268z"
-          fill="#4A5699" p-id="11909"></path>
-        <path
-          d="M709.781 458.729H328.964c-28.867 0-52.263 23.4-52.263 52.269v3.734c0 28.873 23.396 52.269 52.263 52.269h380.817c28.866 0 52.271-23.396 52.271-52.269v-3.734c0.001-28.869-23.405-52.269-52.271-52.269z"
-          fill="#E5594F" p-id="11910"></path>
-      </svg>
-    </div>
-    <div id="tools">
-      <svg t="1690943627160" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-        p-id="9037" width="128" height="128">
-        <path
-          d="M277.1 410.9l-54.3 55c-5.8 5.9-13.7 9.2-21.9 9.2s-16.1-3.3-21.9-9.2l-95.3-96.5c-12.2-12.3-12.2-32.2 0-44.5l157.1-158.3c0.7-0.8 1.8-1.1 2.6-1.7 0.7-0.9 1-1.9 1.8-2.6C328.5 76.9 455.6 51 565.9 96.9h0.1l1.9 0.7c2.2 0.9 3.8 2.5 5.7 3.8 1.1 0.7 2.2 1.2 3.1 2 2.3 2.2 4.2 4.8 5.7 7.7 0.4 0.7 0.9 1.2 1.3 1.9 1.7 3.6 2.8 7.5 3 11.5v0.1c0.2 4.2-0.3 8.4-1.8 12.3h0.1c-0.2 0.5-0.1 1.1-0.4 1.7-1.3 2.9-3.1 5.6-5.2 7.9-0.2 0.2-0.3 0.6-0.6 0.9-2.3 2.6-5.1 4.8-8.2 6.4-0.5 0.2-0.9 0.6-1.3 0.9-3.2 1.5-6.6 2.4-10.1 2.7-0.5 0-1 0.3-1.6 0.3-38.2 2.5-74.6 17.4-103.6 42.4-4.2 3.7-8.6 7.2-12.6 11.2-17.2 17.4-31.7 37.3-43.1 58.9l-0.2 0.9c-2.9 5.8-3.1 12.6-0.5 18.6l514.3 508.1c5.9 5.9 9.2 13.8 9.2 22.1s-3.3 16.3-9.2 22.1l-76.8 77c-5.9 5.9-13.8 9.2-22.1 9.2h-0.1c-8.3 0-16.2-3.3-22.1-9.2L277.1 410.9z"
-          fill="#FFCF41" p-id="9038"></path>
-        <path
-          d="M291.9 949.5c-28 0-55.6-6.2-81-18-9.2-4.4-15.7-12.9-17.5-23-1.8-10 1.5-20.3 8.7-27.6l86.3-86.4-32.4-32.3-85.8 85.8c-7.3 7.3-17.7 10.6-27.8 8.8-10.2-1.9-18.7-8.6-22.9-18.1-32-71.4-16.8-155.2 38.2-210.8 50-49.2 123.1-67 190.1-46.1l234-233.9c-21-67-3.3-140.1 46.1-190 35.2-35.3 83-55.1 132.8-54.9 26.7 0 53.7 5.8 78.1 16.8 9.4 4.2 16.2 12.8 18 22.9 1.8 10.2-1.4 20.6-8.8 27.8l-87 87 32.4 32.4 87.6-87.6c7.2-7.2 17.5-10.5 27.5-8.7 10.1 1.7 18.6 8.3 23 17.5 33.9 71.8 19.2 157.2-36.7 213.6-35.1 35.3-82.9 55-132.6 54.9-20.3 0-40.7-3.4-60-9.8L469.6 702.1c22.2 67.1 5.4 142.1-45.1 192.6-35.1 35.2-82.9 55-132.6 54.8z"
-          fill="#232426" p-id="9039"></path>
-        <path
-          d="M286.3 885.3c35.3 2.1 69.8-11.1 94.7-36.1 37-37 46.8-94.1 24.2-142-5.6-11.9-3.1-26 6.2-35.3l260.5-260.5c9.3-9.3 23.3-11.8 35.3-6.3 47.8 22 104.2 12.4 142-24.2 25.3-25.3 37.8-60 36.1-94.7l-70.8 70.9c-5.9 5.9-13.8 9.2-22.1 9.2s-16.2-3.3-22.1-9.2L694 280.6c-12.2-12.2-12.2-32 0-44.2l69.3-69.3c-34.2-1-67.3 12.2-91.5 36.3-37 36.8-47 92.8-25.2 140.2 5.4 11.9 2.8 25.8-6.4 35L378.6 640c-9.2 9.1-23 11.6-34.9 6.4-47.5-21-103-11-140.2 25.2-24.3 24.2-37.5 57.4-36.5 91.7l68.3-68.3c5.8-5.9 13.8-9.2 22.1-9.2s16.2 3.3 22.1 9.2l76.5 76.5c5.9 5.8 9.2 13.8 9.2 22.1s-3.3 16.2-9.2 22.1l-69.7 69.6z"
-          fill="#FFFFFF" p-id="9040"></path>
-      </svg>
+    <div class="box">
+      <span class="b1">首页</span>
+      <span class="b2">分类</span>
+      <span class="b3">工具</span>
+      <span class="b4">关于</span>
     </div>
   </div>
-  <div id="content">
-    <div id="article-detail">
+  <div id="banner">
 
-    </div>
   </div>
-  <div id="toast">
-    <div id="articleList" class="toast-box">
-    </div>
-    <div id="chapterList" class="toast-box">
-    </div>
-    <div id="toolList" class="toast-box">
+  <div id="article-box">
+    <div id="article-list">
+
     </div>
   </div>
   <div class="mask"></div>
   <script>
     $(function () {
-      $('.toast-box').hide()
-      $('#content').hide()
-
       var data = $.ajax({
         url: 'data.json',//json文件位置，文件名
         type: "GET",//请求方式为get
@@ -127,122 +55,52 @@
         alert("获取数据出错")
         return
       }
-
-
-      $('#articles').click((event) => {
-        $('.mask').show(0)
-        $('#articleList').show(100)
-      })
-
-      $('#tools').click((event) => {
-        $('.mask').show(0)
-        $('#toolList').show(100)
-      })
-
-      $('#chapters').click((event) => {
-        $('.mask').show(100)
-        $('#chapterList').show(100)
-      })
-
-      $("#toolList").empty()
-      obj.toolList.forEach(tool => {
-        $("#toolList").append(`<a class='toast-item' target='_blank' href='${tool.path}'>${tool.name}</a>`)
-      });
-
-      $("#articleList").empty()
+      // console.log("data ======  ",obj)
+      let articleHtml = '';
       obj.articleList.forEach(article => {
-        $("#articleList").append(`<div class='loadArticle toast-item' value='${article.path}'>${article.name}</div>`)
-
-        $('.loadArticle').click((event) => {
-          try {
-            var path = $(event.target).attr("value")
-            if (!path || path.length == 0) {
-              throw '无效地址'
-            }
-            a = $.ajax({
-              url: path,//json文件位置，文件名
-              type: "GET",//请求方式为get
-              dataType: "text", //返回数据格式为json
-              async: false,
-              success: function (data) {//请求成功完成后要执行的方法
-              }
-            });
-            $('.mask').hide(100)
-            $('#articleList').hide(100)
-            aa = a.responseText;
-            var htmlData = ""
-            if (path.indexOf('.md') >= 0) {
-              htmlData = marked.parse(aa);
-            } else {
-              htmlData = aa
-            }
-            $("#content").html(htmlData)
-
-            $("#chapterList").empty()
-            for (let h2 of $('h2')) {
-              let chapterId = $(h2).attr('id')
-              $("#chapterList").append(`
-                <a class="toast-item chapterItem" value='#${chapterId}'>${chapterId}</a>
-              `)
-            }
-            $('#chapterList').hide()
-
-            $('.chapterItem').click((event) => {
-              var toDomId = $(event.target).attr("value")
-              document.querySelector(toDomId).scrollIntoView(true)
-            })
-
-            
-            
-            $('#content').show(100);
-
-            $('.decrypt').click((event) => {
-              try {
-                var value = $(event.target).attr("value")
-                var jmType = $(event.target).attr("jmType") || 'html'
-                if (!value) {
-                  throw '错误'
-                }
-                var pwd = prompt("请输入密码", "");
-                if (!pwd) {
-                  return
-                }
-                if (pwd.length == 0) {
-                  throw '密码不能为空'
-                }
-
-                var decrypted = CryptoJS.AES.decrypt(value, pwd).toString(CryptoJS.enc.Utf8);
-                if (decrypted.length == 0) {
-                  throw '解密错误'
-                }
-                $(event.target).off("click");
-                
-                $(event.target).html(marked.parse(decrypted))
-                // if(jmType == 'md') {
-                //   $(event.target).html(marked.parse(decrypted))
-                // } else {
-                //   $(event.target).html(decrypted)
-                // }
-                $(event.target).removeAttr("value")
-                $(event.target).removeClass("undecrypt")
-              } catch (error) {
-                alert(error)
-              }
-            })
-          } catch (error) {
-            alert(error)
-          }
+        console.log("article ======  ", article)
+        let tagHtml = ''
+        article.tag.forEach(t => {
+          tagHtml += `<span class='article-tag'>${t}</span>`
         })
-
+        articleHtml += `
+          <div class='article-item' to='${article.path}'>
+            <div class='article-title'>${article.name}</div>
+            <div class='article-info'>
+              <span class='article-date'>${article.date}</span>
+              ${tagHtml}
+            </div>
+          </div>`
       })
+      $('#article-list').html(articleHtml)
+      $('.article-item').click((event) => {
+        var dom = $(event.target)
+        var className = dom.attr("class")
+        switch (className) {
+          case 'article-tag':
+            var tag = dom.text();
 
-      $('.mask').click(() => {
-        $('.toast-box').hide(100)
-        $('.mask').hide(100)
+            break;
+          default:
+            let times = 2;
+            //找到decrypt节点
+            while (!dom.attr('to') && times > 0) {
+              dom = dom.parent()
+              times -= 1
+            }
+            let path = dom.attr('to')
+            console.log("article-item ====  ", className, path)
+            window.location.href = `/article.html?title=${path}`
+            break;
+        }
       })
-
-      $('#articleList').hide();
-      $('#toolList').hide();
+      // $('.article-tag').click((event) => {
+      //   var tag = $(event.target).text()
+      //   console.log("article-tag ====  ",tag)
+      //   if(tag) {
+      //     alert(tag)
+      //   }
+      // })
     });
   </script>
 </body>
@@ -278,41 +136,51 @@
     line-height: 1.6;
   }
 
-  .toast-box {
-    z-index: 10000;
+  .article-item,
+  .article-tag {
+    cursor: pointer;
+  }
+
+  #header {
+    height: 4rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: grid;
-    border: solid 1px white;
-    border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.6);
-    max-height: 80%;
-    overflow: auto;
-    width: 60%;
-    max-width: 600px;
+    z-index: 999;
+    box-shadow: 0px 2px 20px 0px #01010199;
+    background-color: #00000030;
   }
 
-  .toast-item {
-    margin: 0.5rem;
-    background-color: #04bcf940;
-    padding: 0.5rem 0.5rem;
-    line-height: 1.4;
-    font-size: 3rem;
-    cursor: default;
-    border-radius: 0.5rem;
-    box-shadow: rgb(60 64 67 / 30%) 0px 1px 2px 0px, rgb(60 64 67 / 15%) 0px 2px 6px 2px;
-    text-decoration: none;
-    color: #333;
-    text-align: center;
+  .box {
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
   }
 
-  .showclick {
-    text-shadow: 1px 1px 2px #333;
-    font-size: 26px;
-    padding: 10px;
-    border-radius: 5px;
+
+  .box span {
+    cursor: pointer;
+  }
+
+  .box span:hover {
+    color: skyblue;
+  }
+
+  .box span+span {
+    margin-left: 2rem;
+  }
+
+  #banner {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-image: url('https://s1.ax1x.com/2023/08/08/pPVf8xA.jpg');
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #0d7cb1;
   }
 
   .mask {
@@ -327,185 +195,53 @@
     display: none;
   }
 
-
-  #header {
-    width: 3rem;
-    left: 1rem;
-    top: 2rem;
-    border-radius: 0.3rem;
-    opacity: 0.6;
-    position: fixed;
+  #article-box {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    top: 6rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
   }
 
-  #header svg {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  #header div+div {
-    margin-top: 1rem;
-  }
-
-  #content {
+  #article-list {
     max-width: 720px;
     min-width: 360px;
-    padding: 0px 30px 30px 30px;
-    margin: 20px 0px 20px 0px;
+    padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 1px 4px #aaa;
+    box-shadow: 3px 4px 8px 3px #0000005c;
     width: 90%;
-  }
-  #article-detail {
+    background-color: #ffffffad;
+    box-sizing: border-box;
   }
 
-  .undecrypt {
-    color: red;
+  .article-item {
+    margin: 0.5rem 0rem;
+    padding: 0.5rem 0rem;
+    border-bottom: solid 1px black;
+  }
+
+  .article-title {
     font-size: 1.5rem;
   }
 
-  /* md 样式修改 */
-  #content p {
-    padding-left: 1rem;
-    margin: 0.5rem 0rem 0rem 0rem;
-  }
-
-
-
-  /* 标题 */
-  h1 {
-    font-size: 2.6rem;
-  }
-
-  h2 {
-    font-size: 2.2rem;
-  }
-
-  h3 {
-    font-size: 1.9rem;
-  }
-
-  h4 {
-    font-size: 1.6rem;
-  }
-
-  h5 {
-    font-size: 1.3rem;
-  }
-
-  h6 {
-    font-size: 1rem;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0.5rem 0 0 0;
-  }
-
-  /* 列表 */
-  #content ul li::before {
-    content: "";
-    background-color: gray;
-    border: solid 1px gray;
-    border-radius: 50%;
-    display: inline-block;
-    height: 0.5rem;
-    width: 0.5rem;
-    margin-right: 0.5rem;
-  }
-
-  #content li ul li::before {
-    background-color: white;
-  }
-
-  #content li {
-    margin: 0.5rem 0 0 0;
-  }
-
-  /* 分隔线 */
-  hr {
-    margin: 0.5rem 0px;
-  }
-
-  /* 代码字段 */
-  code {
-    color: red;
-    font-weight: 600;
-    font-size: 1.1rem;
-    background-color: #eee;
-    padding: 0.2rem 0.3rem;
-    margin: 0.1rem;
-  }
-
-  /* 代码块 */
-  pre {
-    border-radius: 5px;
-    padding: 0.5rem;
-    margin: 0.5rem 0 0 1rem;
-    background-color: #f4f4f4;
-    border: solid 1px lightgray;
-    color: white;
-  }
-
-  pre code {
-    color: black;
-    font-size: 1.2rem;
-    background-color: transparent;
-    padding: 0;
-    margin: 0rem;
-  }
-
-
-
-  /* 区块 */
-
-  blockquote {
-    margin-left: 1rem;
+  .article-info {
+    font-size: 0.8rem;
     margin-top: 0.5rem;
-    border-left: 4px solid #c2c2c2;
-    color: #777;
   }
 
-  /* 表格 */
-  table {
-    border-collapse: collapse;
-    width: calc(100% - 1rem);
-    text-align: left;
-    margin: 1rem 0rem 0rem 1rem;
+  .article-date::before {
+    content: '📅 ';
   }
 
-  table tr:nth-child(2n),
-  thead {
-    background-color: #f8f8f8;
+  .article-date+.article-tag::before {
+    content: '🔖 ';
+    margin-left: 1rem;
   }
 
-  tr,
-  td,
-  th {
-    border: 1px solid #dfe2e5;
-    margin: 0;
-    padding: 0;
-  }
-
-  td,
-  th {
-    padding: 6px 13px;
-  }
-
-  th {
-    font-weight: bold;
-  }
-
-  ol {
-    margin-left: 2rem;
-  }
-
-  ul {
-    list-style: none;
-    padding-left: 1rem;
+  .article-tag+.article-tag::before {
+    content: '、';
   }
 </style>
 

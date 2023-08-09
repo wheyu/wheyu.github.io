@@ -1,5 +1,8 @@
 # <div align="center">md教程</div>
 
+<span id='date'>2023-08-03</span>
+<span class='tag'>markdown</span><span class='tag'>教程</span>
+
 ## 简介
 - Markdown语言是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。
 - Markdown语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建

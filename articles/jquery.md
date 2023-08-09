@@ -3,9 +3,6 @@
 <span id='date'>2023-08-04</span>
 <span class='tag'>javascript</span><span class='tag'>jquery</span><span class='tag'>前端</span>
 
-
-<div class='decrypt undecrypt' jmType='html' style='margin: 1rem;' value='U2FsdGVkX19J4PpfqFT7GxoabS4s36/y8E57pKAiHYA5PD+n3iZS6Yk1YSRrV1iGfGTjJb6OzDPLUS8zf0g8oTzgpwTJaEZR2Yg6Ukmc9FU='>普通类型，点击查看</div>
-
 ---
 ## 简介
 
@@ -40,20 +37,20 @@
 - 选择器
 
   - css选择器
-  
-  ```
-  <div class='p' id='main'>
-  	<div class='a' alt='test'>
-  		<div class='b'>
-  			<span class='b'></span>
-  			<span class='c'></span>
-  			<span class='c'></span>
-  			<span class='c'></span>
-  		</div>
-  	</div>
-  	<div class='p'></div>
+
+```
+<div class='p' id='main'>
+  <div class='a' alt='test'>
+    <div class='b'>
+      <span class='b'></span>
+      <span class='c'></span>
+      <span class='c'></span>
+      <span class='c'></span>
+    </div>
   </div>
-  ```
+  <div class='p'></div>
+</div>
+```
   
 | 名称           | 语法 | 说明 |
 | -------------- | ------------- | ----------------------------------------------- |
@@ -102,4 +99,4 @@
 
 - 一些例子
 
-<div class='decrypt undecrypt' jmType='md' style='margin: 1rem;' value='U2FsdGVkX19xxN2W4kK1zKOBl0ch3A0zmH7UQFJBosrzzwPW5/a2nYKleKaw7TSLi1r/l52O9AnfGH2WAMe5IwMUm6Jc/u4vDWktRTSCOKt4zh3aI651uZtbPyrXKSPed6fE1s5Z/5SKHzANYdlxVLB9VRi/Xhr/ydVbirm8HP3aR+cvw2g785t5E8ingeAOGSygoMVJCKTces9qPziwHcM2ZC3dHsVaJRq8ZgvI03yK2rW3jovHdiytZEpFIEc6vdIzjJhAnixpNc+puW0ygHx4snNgXkW3Mky6Rdb0hTr2fj41Z2Y2PMlFCiVJzpqqDxBe44Y0EzLociqeUEAzOg=='>例子一，点击查看</div>
+<div class='decrypt undecrypt' jmType='md' style='margin: 1rem;' value='U2FsdGVkX19GtsM7J5V9ZUBL2nxwGvjpKhZHhn+gD2oocMXcEO4vkXgQcX/Z/6Sj2y7HAFtYHbWuRuTrB+Im/P1GXFLLXgwMRQuR3Zcp8cy/luzoK0T1YaGzwwC91ycmk1t7PV07nueh6L8UFdY2aEY+8GyYYVoZqlSlOrY8A2k9EGNC7k65G3ymAXK7+rTD/t56sn5W54LNL2LW9gXaj1zzMX93IFT9Dc9bbp0YYvJXV9nCS+9IW2qzGf9IwlREPaYJsbo1wumRiqwE+IcUb6Eu9e92v6EtNTcczIpAUEm4aRJRNUHHk6rCyiEdVjgJgcZx6Ri//x7s5Vj45pBHQA=='><div><button>例子一，点击查看</button></div></div>
