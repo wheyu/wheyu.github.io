@@ -10,11 +10,20 @@
 
   <script>
     const WIDTH = 750
+    let isMobile = navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    );
+    let scale = isMobile ? 24 : 18
     const resize = () => {
-      document.querySelector('html').style.fontSize = Math.min(20 * (window.innerWidth / WIDTH), 20) + 'px';
+      document.querySelector('html').style.fontSize = Math.min(scale * (window.innerWidth / WIDTH), scale) + 'px';
     }
     window.onresize = resize
     resize()
+    
+    window.onload = () => {
+      let bgUrl = isMobile ? 'https://s1.ax1x.com/2023/08/10/pPmkXbd.jpg' : 'https://s1.ax1x.com/2023/08/10/pPmkvVA.jpg'
+      document.querySelector("html").style.backgroundImage = `URL('${bgUrl}')`
+    }
   </script>
 </head>
 
@@ -26,9 +35,6 @@
       <span class="b3">工具</span>
       <span class="b4">关于</span>
     </div>
-  </div>
-  <div id="banner">
-
   </div>
   <div id="article-box">
     <div id="article-list">
@@ -55,7 +61,7 @@
         alert("获取数据出错")
         return
       }
-      // console.log("data ======  ",obj)
+      console.log("data ======  ",obj)
       let articleHtml = '';
       obj.articleList.forEach(article => {
         let tagHtml = ''
@@ -127,6 +133,10 @@
 
   html {
     scroll-behavior: smooth;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #0d7cb1;
   }
 
   body {
@@ -138,6 +148,10 @@
   .article-item,
   .article-tag {
     cursor: pointer;
+  }
+  
+  .article-tag {
+    color: blue;
   }
 
   #header {
@@ -169,17 +183,6 @@
 
   .box span+span {
     margin-left: 2rem;
-  }
-
-  #banner {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    background-image: url('https://s1.ax1x.com/2023/08/08/pPVf8xA.jpg');
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover;
-    background-color: #0d7cb1;
   }
 
   .mask {
@@ -218,8 +221,11 @@
 
   .article-item {
     margin: 0.5rem 0rem;
-    padding: 0.5rem 0rem;
+    padding: 1rem 1rem;
     border-bottom: solid 1px black;
+    background-color: #ffffffa8;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
   }
 
   .article-title {

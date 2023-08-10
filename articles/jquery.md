@@ -1,7 +1,7 @@
 # <div align="center">jquery 知识点整理</div>
 
 <span id='date'>2023-08-04</span>
-<span class='tag'>javascript</span><span class='tag'>jquery</span><span class='tag'>前端</span>
+<span class='key-tag'>javascript</span><span class='key-tag'>jquery</span><span class='key-tag'>前端</span>
 
 ---
 ## 简介
@@ -99,4 +99,4 @@
 
 - 一些例子
 
-<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX1/2rdinJdb0dY9b/ghBhSC+NFtHSruacwsZrSg9MYJeQx2irB3QLVw3gIDbkOemQgn2Cdhmb3o4tnCd8pRxjDUoSdLOwCKLw7/Gafc7mbhfSneQCRm1ERc2g7/RfAyw73Wmw/veCNRhqWna6GTPb/Fr9HrPEYRHDbMRg8PzAAzCQGQDKJbwPIHKWjW5pM5CZrhk1bbH5/f4DeKd4zwBOF9yaiIYGs3eYNrdEG8vxVrcko3mVzgKrnmUYQL+FKUXzlcqZkriotF5ieycxC2KFeHyvxR0RGgVOAZntiKyltoODpTDAvjf+vLaF6iH2qXi8CKEl4U3H+THpg=='><div><button>例子一，点击查看</button></div></div>
+<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX1/FTFj5WrbW+Ou0f7K6f4JVrFuAn7fX7+D4EyORqNdax9KTeYMJZOFU7lJlLpEmmvJJLH58riZQ8HxsDegZ07hR36GRQkjM8gVUpPdHVRg+Wr8UEW7nXMpoaxjYeDg515BenS4h5Wj/7iLI6G7JN2cUt66Nj6nZMv8/L1tA2LlkLiArhQzHIQNrDBvGkswasgJ4DNFooYJbQTLC7yTJgARiqfN5de+jkamkd8hnbubFnV5YXziSgtFhkz6WIeOL6XaEGkqU+4qLjO0D+2C2pXfXwkIWr++/3bUcRb4Tip+BPpd3zVXGJ+nI3S+I1zpbnf/bBZjiDFVJEQ=='><div><button>例子一，点击查看</button></div></div>

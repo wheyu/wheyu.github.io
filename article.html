@@ -12,11 +12,18 @@
 
   <script>
     const WIDTH = 750
+    let isMobile = navigator.userAgent.match(
+      /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+    );
+    let scale = isMobile ? 20 : 14
     const resize = () => {
-      document.querySelector('html').style.fontSize = Math.min(20 * (window.innerWidth / WIDTH), 20) + 'px';
+      document.querySelector('html').style.fontSize = Math.min(scale * (window.innerWidth / WIDTH), scale) + 'px';
     }
-    window.onresize = resize
     resize()
+    window.onload = () => {
+      let bgUrl = isMobile ? 'https://s1.ax1x.com/2023/08/10/pPmkXbd.jpg' : 'https://s1.ax1x.com/2023/08/10/pPmkvVA.jpg'
+      document.querySelector("html").style.backgroundImage = `URL('${bgUrl}')`
+    }
   </script>
 </head>
 
@@ -63,16 +70,21 @@
   <div id="content">
   </div>
   <div id="toast">
-    <div id="articleList" class="toast-box">
-    </div>
     <div id="chapterList" class="toast-box">
+    </div>
+    <div id="ask-box" class="toast-box">
+      <div class="ask-title"></div>
+      <input class="ask-input" />
+      <div class="ask-btns">
+        <button class="ask-btn" data="true">确定</button>
+        <button class="ask-btn" data="false">取消</button>
+      </div>
     </div>
   </div>
   <div class="mask"></div>
   <script>
     $(function () {
       let url = window.location.href
-      console.log("======= url ", url)
       let articlePath = ''
       try {
         articlePath = decodeURI(url.match(/(?<=title\=).*?(?=$|&)/g)[0])
@@ -81,6 +93,7 @@
       }
       $('.toast-box').hide()
       $('#content').hide()
+      $('#toast').show()
 
       var data = $.ajax({
         url: 'data.json',//json文件位置，文件名
@@ -131,7 +144,6 @@
             }
           });
           $('.mask').hide(100)
-          $('#articleList').hide(100)
           aa = a.responseText;
           var htmlData = ""
           if (path.indexOf('.md') >= 0) {
@@ -177,7 +189,7 @@
             path && window.open(path);
           })
 
-          $('.decrypt').click((event) => {
+          $('.decrypt').click(async (event) => {
             try {
               var dom = $(event.target)
               let times = 2;
@@ -191,7 +203,7 @@
               if (!value) {
                 throw '错误'
               }
-              var pwd = prompt("请输入密码", "");
+              var pwd = await Ask("请输入密码")
               if (!pwd) {
                 return
               }
@@ -220,6 +232,31 @@
           alert(error)
         }
       }
+
+      async function Ask(title){
+        $('.ask-input').val("")
+        $('.ask-title').text(title)
+        $('#ask-box').show()
+        $('.mask').show()
+        return new Promise(res => {
+          $('.ask-btn').click((event) => {
+            let dom = $(event.target)
+            let input = $('.ask-input').val()
+            $('.ask-btn').off("click");
+            $('#ask-box').hide()
+            $('.mask').hide()
+            switch(dom.attr('data')){
+              case "true":
+                res(input)
+                break;
+              case "false":
+                res('')
+                break;
+            }
+          })
+        })
+      }
+
     });
   </script>
 </body>
@@ -247,6 +284,10 @@
 
   html {
     scroll-behavior: smooth;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #0d7cb1;
   }
 
   body {
@@ -262,12 +303,16 @@
     /* 继承父元素的颜色 */
   }
 
-  .tag {
+  #toast {
+    display: none;
+  }
+
+  .tag,.key-tag {
     color: blue;
     cursor: pointer;
   }
 
-  #date+.tag::before {
+  #date+.key-tag::before {
     content: '🔖 ';
     margin-left: 2rem;
   }
@@ -276,7 +321,31 @@
     content: '📅 ';
   }
 
+  #version::before {
+    content: '🔰 ';
+  }
+
+  .soft-tag::before {
+    content: '📌 ';
+  }
+
+  .soft-tag {
+    display: contents;
+    margin-left: 0.5rem;
+  }
+  .soft-info {
+    font-size: 0.3rem;
+    margin-top: 0.5rem;
+  }
+
+  .soft-info > span {
+    margin-right: 0.5rem;
+  }
+
   .tag+.tag::before {
+    content: "、";
+  }
+  .key-tag+.key-tag::before {
     content: "、";
   }
 
@@ -289,11 +358,13 @@
     display: grid;
     border: solid 1px white;
     border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.9);
     max-height: 80%;
     overflow: auto;
     width: 60%;
     max-width: 600px;
+    padding: 1rem;
+    box-sizing: border-box;
   }
 
   .toast-item {
@@ -317,12 +388,46 @@
     border-radius: 5px;
   }
 
+  .ask-title {
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .ask-input {
+    line-height: 3rem;
+    height: 3rem;
+    border: solid gray 1px;
+    width: 80%;
+    margin-left: 10%;
+    border-radius: 0.2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .ask-btns {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .ask-btn {
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.2rem;
+    font-size: 1.1rem;
+    border: solid gray 1px;
+  }
+
+  .ask-btn + .ask-btn {
+    margin-left: 1rem;
+  }
+
   .mask {
     width: 100%;
     height: 100%;
-    background-color: gray;
+    background-color: black;
     position: fixed;
-    opacity: 0.5;
+    opacity: 0.6;
     z-index: 999;
     top: 0px;
     left: 0px;
@@ -356,51 +461,92 @@
     border-radius: 8px;
     box-shadow: 0 1px 4px #aaa;
     width: 90%;
+    background-color: #ffffffd6;
+    box-sizing: border-box;
   }
 
   .undecrypt {
-    color: red;
-    font-size: 1rem;
+    position: relative;
+  }
+
+  .undecrypt::after {
+    content: "🔒";
+    font-size: 0.4rem;
+    position: absolute;
+    top: 0rem;
+    right: 0rem;
+    margin-right: -1rem;
+  }
+  .info {
+    color: gray;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+
+  .title-after {
+    font-size: 0.5rem;
+    height: 2rem;
+    line-height: 3rem;
+    margin-left: 0.5rem;
   }
 
   /* 分享 */
-  .share-web {
+  .share-web,.share-soft {
     display: flex;
     /* width: calc(100% - 30px); */
     flex-wrap: wrap;
   }
 
   .web-item {
+    flex-direction: row;
+    width: calc(50% - 1rem);
+    padding: 0.5rem 1rem;
+  }
+  .soft-item {
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 1rem;
   }
 
   .item {
     display: flex;
-    padding: 0.5rem 1rem;
-    border: solid 1px #a3a3a3;
     border-radius: 0.5rem;
     min-width: 10rem;
-    width: calc(50% - 1rem);
     box-sizing: border-box;
     margin: 0.5rem;
     cursor: pointer;
-    flex-direction: column;
+    box-shadow: rgb(0 0 0 / 15%) 0px 15px 25px, rgb(0 0 0 / 5%) 0px 5px 10px;
+    background-color: #ffffffa3;
   }
 
   .soft-detail {
     display: flex;
+    flex-direction: column;
   }
 
   .soft-detail .decrypt + .decrypt {
     margin-left: 1rem;
   }
 
-  .soft-detail span {
-    /* border-bottom: solid gray 1px; */
+  .dl {
+    margin-top: 0.5rem;
+  }
+
+  .dl div + div{
     margin-left: 1rem;
+  }
+
+  .dl > div {
+    border-bottom: solid gray 1px;
   }
 
   .mg-l-1 {
     margin-left: 1rem;
+  }
+
+  .web-detail {
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .web-img {
@@ -409,7 +555,10 @@
   }
 
   .item a {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    white-space: nowrap;
   }
 
   /* md 样式修改 */
@@ -446,6 +595,10 @@
 
   h6 {
     font-size: 1rem;
+  }
+
+  .flex {
+    display: flex;
   }
 
   h1,

@@ -1,6 +1,6 @@
 # <div align="center">网站分享</div>
-  <span id='date'>2023-08-09</span>
-  <span class='tag'>分享</span><span class='tag'>网站</span>
+  <span id='date'>2023-08-10</span>
+  <span class='key-tag'>分享</span><span class='key-tag'>网站</span>
   - - -
   
 
@@ -67,7 +67,7 @@
       <img class='web-img' src='https://cili.uk/favicon.ico'/>
         <div class='web-detail mg-l-1'>
         <a target='_blank'>无极磁力</a>
-        <div>⭐⭐⭐⭐⭐</div>
+        <div>⭐⭐⭐</div>
       </div>
     </div>
 </div>
