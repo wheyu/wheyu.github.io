@@ -94,7 +94,7 @@ async function DealSoft(){
 }
 async function InitData(){
   try {
-    shareJSON = await fs.readFileSync(`origin/share.json`, { encoding: 'utf-8' })
+    shareJSON = await fs.readFileSync(`${convertDir}/share.json`, { encoding: 'utf-8' })
     shareJSON = JSON.parse(shareJSON)
   } catch (error) {
     console.log("error ====  ",error)
@@ -105,8 +105,10 @@ async function InitData(){
 async function DealConvertPath(){
   let fileList = await fs.readdirSync(convertDir)
   for (let fileName of fileList) {
-    console.log("正在处理==>",fileName)
-    await DealArticle(fileName)
+    if(/.md$/g.test(fileName)) {
+      console.log("正在处理==>",fileName)
+      await DealArticle(fileName)
+    }
   }
 }
 

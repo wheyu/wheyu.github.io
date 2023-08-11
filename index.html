@@ -41,9 +41,18 @@
 
     </div>
   </div>
+  <div class="toast-box">
+    <div id="tag-box">
+
+    </div>
+  </div>
   <div class="mask"></div>
   <script>
     $(function () {
+      $('.toast-box').hide();
+      $('#tag-box').hide();
+      var allTags = []
+
       var data = $.ajax({
         url: 'data.json',//json文件位置，文件名
         type: "GET",//请求方式为get
@@ -61,51 +70,97 @@
         alert("获取数据出错")
         return
       }
-      console.log("data ======  ",obj)
-      let articleHtml = '';
-      obj.articleList.forEach(article => {
-        let tagHtml = ''
-        article.tag.forEach(t => {
-          tagHtml += `<span class='article-tag'>${t}</span>`
-        })
-        articleHtml += `
-          <div class='article-item' to='${article.path}'>
-            <div class='article-title'>${article.name}</div>
-            <div class='article-info'>
-              <span class='article-date'>${article.date}</span>
-              ${tagHtml}
-            </div>
-          </div>`
-      })
-      $('#article-list').html(articleHtml)
-      $('.article-item').click((event) => {
-        var dom = $(event.target)
-        var className = dom.attr("class")
-        switch (className) {
-          case 'article-tag':
-            var tag = dom.text();
-
-            break;
-          default:
-            let times = 2;
-            //找到decrypt节点
-            while (!dom.attr('to') && times > 0) {
-              dom = dom.parent()
-              times -= 1
+      
+      LoadArticle(obj.articleList)
+      LoadTagsBox();
+      function LoadArticle(articleList){
+        let articleHtml = '';
+        articleList.forEach(article => {
+          let tagHtml = ''
+          article.tag.forEach(t => {
+            tagHtml += `<span class='article-tag'>${t}</span>`
+            if(allTags.indexOf(t) == -1) {
+              allTags.push(t)
             }
-            let path = dom.attr('to')
-            console.log("article-item ====  ", className, path)
-            window.location.href = `/article.html?title=${path}`
+          })
+          articleHtml += `
+            <div class='article-item' to='${article.path}'>
+              <div class='article-title'>${article.name}</div>
+              <div class='article-info'>
+                <span class='article-date'>${article.date}</span>
+                ${tagHtml}
+              </div>
+            </div>`
+        })
+
+        $('#article-list').html(articleHtml)
+        $('.article-item').click((event) => {
+          var dom = $(event.target)
+          var className = dom.attr("class")
+          switch (className) {
+            case 'article-tag':
+              var tag = dom.text();
+
+              break;
+            default:
+              let times = 2;
+              //找到decrypt节点
+              while (!dom.attr('to') && times > 0) {
+                dom = dom.parent()
+                times -= 1
+              }
+              let path = dom.attr('to')
+              console.log("article-item ====  ", className, path)
+              window.location.href = `/article.html?title=${path}`
+              break;
+          }
+        })
+      
+        $('.article-tag').click((event) => {
+          var tag = $(event.target).text()
+          if(tag) {
+            LoadArticle(obj.articleList.filter(x => x.tag.indexOf(tag) >= 0))
+          }
+        })
+      }
+
+      function LoadTagsBox(){
+        let tagsListHtml = `<span class='tag-item'>全部</span>`
+        allTags.forEach(tag => {
+          tagsListHtml += `<span class='tag-item'>${tag}</span>`
+        })
+        $('#tag-box').html(tagsListHtml)
+        $('.tag-item').click((event) => {
+          var value = $(event.target).text()
+          if(value == '全部'){
+            LoadArticle(obj.articleList)
+          } else {
+            LoadArticle(obj.articleList.filter(x => x.tag.indexOf(value) >= 0))
+          }
+          $('#tag-box').hide();
+          $('.mask').hide();
+        })
+      }
+
+      $('.box > span').click((event) => {
+        var clickName = $(event.target).text()
+        switch(clickName) {
+          case '首页': 
+            LoadArticle(obj.articleList)
+            break;
+          case '分类': 
+            $('#tag-box').show();
+            $('.mask').show();
             break;
         }
       })
-      // $('.article-tag').click((event) => {
-      //   var tag = $(event.target).text()
-      //   console.log("article-tag ====  ",tag)
-      //   if(tag) {
-      //     alert(tag)
-      //   }
-      // })
+
+      
+      $('.mask').click((event) => {
+        $('#tag-box').hide();
+        $('.mask').hide();
+      })
+      $('.toast-box').show();
     });
   </script>
 </body>
@@ -164,6 +219,33 @@
     z-index: 999;
     box-shadow: 0px 2px 20px 0px #01010199;
     background-color: #00000030;
+  }
+
+  #tag-box {
+    z-index: 9999;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    border: solid 1px white;
+    border-radius: 0.5rem;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 1rem;
+    box-sizing: border-box;
+    max-width: 600px;
+    max-height: 60%;
+  }
+
+  .tag-item {
+    padding: 0.2rem 0.6rem;
+    margin: 0.2rem;
+    background-color: #f1f1f1;
+    border-radius: 0.3rem;
+    color: blue;
+    cursor: pointer;
+    font-size: 1.3rem;
   }
 
   .box {

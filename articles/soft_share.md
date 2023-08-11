@@ -1,5 +1,5 @@
 # <div align="center">软件分享</div>
-  <span id='date'>2023-08-10</span>
+  <span id='date'>2023-08-11</span>
   <span class='key-tag'>分享</span><span class='key-tag'>软件</span>
   - - -
   
@@ -22,7 +22,7 @@
             一款视频、图片、音频的转换、压制、修改软件
           </div>
           <div class='dl flex'>
-            <div to='http://formatfactory.org/CN/index.html'>官网</div><div class='decrypt undecrypt' jmType='html' value='U2FsdGVkX184dK3cG2ce//eCDM+bnKJjKyOMi2vbMpvgCG0WYGQNK5hsKLg5P4tOYIhzUJRmMYe9s7qdQXQytHslKC9dlbMzgX2GoDb4NCU='><div>网盘</div></div>
+            <div to='http://formatfactory.org/CN/index.html'>官网</div><div class='decrypt undecrypt' jmType='html' value='U2FsdGVkX1/PAm/p20YKScMElZXsOW9lxzatOF7hdYPpt6rUN6mIPKEMkVzmesYpAYXUjVQBHim/SWJPn72/8Jc45g7QLwwt/oKalySKzr8='><div>网盘</div></div>
           </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
             一款windows、office状态查询、激活工具
           </div>
           <div class='dl flex'>
-            <div class='decrypt undecrypt' jmType='html' value='U2FsdGVkX18y5judhOjG88UA+/MVGe8O2OKqlrjvN6iSxyexg0pMoiK6o9Rh1+Kbm+Akm/EsqH+DUpkZQXtLQa1Otme1w5Iy+3za22YCKK8='><div>网盘</div></div>
+            <div class='decrypt undecrypt' jmType='html' value='U2FsdGVkX1+dWynEJheGYRFX+Uh02KO2SQWWvJIBb0aTvNBuoKrX+9v4NqP5YJ1n4sCt773Pu5Ngs5Vga3RRbylZBIpv4UnKMjyEAfBu100='><div>网盘</div></div>
           </div>
           </div>
         </div>
