@@ -99,4 +99,4 @@
 
 - 一些例子
 
-<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX18czKt9g8LiNPZGRg85Ek8jgEaf9JIbK02+kSjH+5YIYAYLvhN2Mtz4E9p26IC3zjIvBpfuo/bUS6pIkt3uMKv/XBsUPc8V/XEfosweG02vQSQm69uVWtXOOz0Mjd3ZliOHaXORz+p9QTk6s4JruFugADWFLiUfaPgyccIBeoxLcVJQoYfkP/8RQuaA2hUBWhotE4vW3NiHLXQHD/Bm0lzaN4jfleSk8MMk151AM4E7J7R4w7IwbkRZJe8GiszzKD7/hg3Uau2HeQAtOh7AzQTVGNfDlyQkpNpEbjT5w075NFIFjYKRmp4kYjy+oueclNTHC3zhoWJB8w=='><div><button>例子一，点击查看</button></div></div>
+<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX19UDjnfpmWMSnskz1H78JcGioeKMC8+M0WZy6DYgWt3TLGXCOClRxXKFl8GMT4Lr0qx+FXB+tBq3QI9U6s9mmveBN2NaFcxm71B0I0ZXMPGaEET4t5yLGjcYflSD8sqGq12B029C+S3LE+XRH/4a6aK1yoHJY7szNIndP4wbBtwdcV1NTFXs0dchYIfzb/GcBlZ6i+GHgaeYA9DQ+olhJTdcVocgmP/fjoe/2n6XCIReeATuuiUakLrldS025x02f21IkKnFEcRvPrKUWX+CgyU5ZM3PMgAltQ+lYDAZW9zb9bSsjBUUommteq0WOoDInHIAgqn9LTtew=='><div><button>例子一，点击查看</button></div></div>
