@@ -58,10 +58,10 @@ async function DealSoft(){
         if(url.pwd) {
           urlMD += `<pwd>${url.pwd}</pwd>
           <jmType>html</jmType>
-          <jmInfo><div>${url.pwdName}</div></jmInfo>
-          <jm><div to='${url.link}'>${url.name}</div></jm>`
+          <jmInfo><span>${url.pwdName}</span></jmInfo>
+          <jm><span to='${url.link}'>${url.name}</span></jm>`
         } else {
-          urlMD += `<div to='${url.link}'>${url.name}</div>`
+          urlMD += `<span to='${url.link}'>${url.name}</span>`
         }
       })
       mdData += `<div class='soft-item item'>

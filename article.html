@@ -467,16 +467,22 @@
 
   .undecrypt {
     position: relative;
+    cursor: pointer;
   }
 
-  .undecrypt::after {
+  .undecrypt > *::after {
     content: "🔒";
     font-size: 0.4rem;
     position: absolute;
     top: 0rem;
-    right: 0rem;
-    margin-right: -1rem;
+    left: 0rem;
   }
+
+  .undecrypt > span {
+    margin-left: 1rem;
+    border-bottom: solid gray 1px;
+  }
+
   .info {
     color: gray;
     font-size: 1.2rem;
@@ -532,11 +538,11 @@
     margin-top: 0.5rem;
   }
 
-  .dl div + div{
+  .dl > * + *{
     margin-left: 1rem;
   }
 
-  .dl > div {
+  .dl > * {
     border-bottom: solid gray 1px;
   }
 
