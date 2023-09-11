@@ -98,4 +98,4 @@
 | 解绑                | `.off('click')`                                              |                                |
 
 - 一些例子
-<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX1/Ah/W2W00vS/D/pXwN/OlzCIjIbCtsdqYYUZiZ5/BJ+hj7Bs4hH6YeOdnRqfKW1wbdsCzC4vpJmpvnGF7ye54lz8D0QKEJQA9lZKf0TIQKfp7ICtPKsxK5S1CIk7uZJZ6kVr/Yfv92Hr71PRJOMJqdd3sXTUE8Ao1Z2jVUwJ6VUxdQumMJfOPQiT5TetwvO4EP15g2oA15NTlfZxYkhf0DC0MlLvG3l964QKE9e11wccFTfTBN0DQtBNMrKDt5ipev500vIlyY7s4kqg3EL5WhAolfGEdvLlp5Ee7aBm1j8Ae8nfHiE5kIhxNRJTZKPlJGJjhfyU0twA=='><span>例子一，点击查看</span></div>
+<div class='decrypt undecrypt' jmType='md' value='U2FsdGVkX19DO88gqY9GrquCiE2f3byhuuv08lklP9SInfs3TCxt8W0g/qKhkzoYzqpOn6WB96Zzf+gpg4N3viRH8Xr3bT59pNjqCUaN1zahAXiXPW4PGD52gsK5tZPkfdobsNLsa6AzZ4lW+90zG7/SsN6nLLmQS48GgGvpB7RHW8NdVPNd6Sz10I7SA7dlIfPpb8FxghGc/ZmVjIQKXEszojGXuarFvSPGaO/qKYBRO6VrG3MBAGuEFbe2nlMgdez6vnd/0fbAMeIk1diYuPo5jQy/Rvsti3CFDrzMC4rwrTknVgRM5Ifhr5tDSg9NQ9PC8wgUav6zyoa9HYhakg=='><span>例子一，点击查看</span></div>

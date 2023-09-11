@@ -42,7 +42,10 @@
     </div>
   </div>
   <div class="toast-box">
-    <div id="tag-box">
+    <div id="tag-box" class="toast-panel">
+
+    </div>
+    <div id="tool-box" class="toast-panel">
 
     </div>
   </div>
@@ -51,6 +54,7 @@
     $(function () {
       $('.toast-box').hide();
       $('#tag-box').hide();
+      $('#tool-box').hide();
       var allTags = []
 
       var data = $.ajax({
@@ -66,6 +70,7 @@
         obj = JSON.parse(data.responseText)
       } catch (error) {
       }
+      console.log("==========obj  ",obj)
       if (!obj) {
         alert("获取数据出错")
         return
@@ -75,7 +80,8 @@
       })
 
       LoadArticle(obj.articleList)
-      LoadTagsBox();
+      LoadTagsPanel();
+      LoadToolsPanel();
       function LoadArticle(articleList) {
         let articleHtml = '';
         articleList.forEach(article => {
@@ -124,7 +130,7 @@
         })
       }
 
-      function LoadTagsBox() {
+      function LoadTagsPanel() {
         obj.articleList.forEach(article => {
           article.tag.forEach(t => {
             let tagIndex = allTags.findIndex(x => x.value == t)
@@ -139,12 +145,12 @@
           })
         })
 
-        let tagsListHtml = `<span class='tag-item'>全部</span>`
+        let tagsListHtml = `<span class='tag-item toast-item'>全部</span>`
         allTags.forEach(tag => {
           if(tag.count > 1) {
-            tagsListHtml += `<span class='tag-item' count='${tag.count}'>${tag.value}</span>`
+            tagsListHtml += `<span class='tag-item toast-item' count='${tag.count}'>${tag.value}</span>`
           } else {
-            tagsListHtml += `<span class='tag-item'>${tag.value}</span>`
+            tagsListHtml += `<span class='tag-item toast-item'>${tag.value}</span>`
           }
         })
         $('#tag-box').html(tagsListHtml)
@@ -159,6 +165,17 @@
           $('.mask').hide();
         })
       }
+      function LoadToolsPanel() {
+        let toolssListHtml = ``
+        obj.toolList.forEach(tool => {
+          toolssListHtml += `<span class='tool-item toast-item' to='${tool.path}'>${tool.name}</span>`
+        })
+        $('#tool-box').html(toolssListHtml)
+        $('.tool-item').click((event) => {
+          var toPath = $(event.target).attr('to')
+          toPath && window.open(toPath);
+        })
+      }
 
       $('.box > span').click((event) => {
         var clickName = $(event.target).text()
@@ -170,12 +187,17 @@
             $('#tag-box').show();
             $('.mask').show();
             break;
+          case '工具':
+            $('#tool-box').show();
+            $('.mask').show();
+            break;
         }
       })
 
 
       $('.mask').click((event) => {
         $('#tag-box').hide();
+        $('#tool-box').hide();
         $('.mask').hide();
       })
       $('.toast-box').show();
@@ -239,7 +261,7 @@
     background-color: #00000030;
   }
 
-  #tag-box {
+  .toast-panel {
     z-index: 9999;
     position: fixed;
     left: 50%;
@@ -257,7 +279,7 @@
     width: 80%;
   }
 
-  .tag-item {
+  .toast-item {
     padding: 0.2rem 0.6rem;
     margin: 0.2rem 0.5rem;
     background-color: #f1f1f1;
@@ -266,9 +288,9 @@
     cursor: pointer;
     font-size: 1.3rem;
     position: relative;
-  }
 
-  .tag-item::after {
+  }
+  .toast-item::after {
     content: attr(count);
     font-size: 0.4rem;
     top: -0.6rem;
