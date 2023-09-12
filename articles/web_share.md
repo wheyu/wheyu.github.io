@@ -1,5 +1,5 @@
 # <div align="center">网站分享</div>
-  <span id='date'>2023-09-11</span>
+  <span id='date'>2023-09-12</span>
   <span class='key-tag'>分享</span><span class='key-tag'>网站</span>
   - - -
   
@@ -68,6 +68,42 @@
         <div class='web-detail mg-l-1'>
         <a target='_blank'>无极磁力</a>
         <div>⭐⭐⭐</div>
+      </div>
+    </div>
+</div>
+
+## 工具
+<div class='share-web'>
+<div class='web-item item' to='https://www.crxsoso.com/'>
+      <img class='web-img' src='https://www.crxsoso.com/favicon.ico'/>
+        <div class='web-detail mg-l-1'>
+        <a target='_blank'>crx搜搜</a>
+        <div>⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+<div class='web-item item' to='https://any86.github.io/any-rule/'>
+      <img class='web-img' src='https://any86.github.io/any-rule/favicon.ico'/>
+        <div class='web-detail mg-l-1'>
+        <a target='_blank'>正则大全</a>
+        <div>⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+</div>
+
+## 趣味
+<div class='share-web'>
+<div class='web-item item' to='https://www.hi2future.com/'>
+      <img class='web-img' src='https://www.hi2future.com/favicon.ico'/>
+        <div class='web-detail mg-l-1'>
+        <a target='_blank'>时间邮局</a>
+        <div>⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+<div class='web-item item' to='https://shadiao.plus/'>
+      <img class='web-img' src='https://shadiao.plus/favicon.ico'/>
+        <div class='web-detail mg-l-1'>
+        <a target='_blank'>沙雕新闻</a>
+        <div>⭐⭐⭐⭐⭐</div>
       </div>
     </div>
 </div>
