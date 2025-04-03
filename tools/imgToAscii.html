@@ -65,9 +65,15 @@
         
         .inputNum {
             width: 23px;
+        }
+
+        input {
             height: 24px;
             border-radius: 5px;
             text-align: center;
+        }
+        #word {
+            width: 80px;
         }
         
         #resultImage {
@@ -91,10 +97,11 @@
             <option value="noColor">黑白</option>
           </select>
         <select id="showType" onchange="selectChange(this)">
-              <option value="1">爱心</option>
-              <option value="2">文字</option>
-              <option value="3">字符串</option>
-            </select>
+            <option value="1">爱心</option>
+            <option value="2">文字</option>
+            <option value="3">字符串</option>
+        </select>
+        <input id="word" value="一夜暴富" maxlength="8"/>
         <select id="imageType" onchange="selectChange(this)">
                   <option value="png">png</option>
                   <option value="jpeg">jpeg</option>
@@ -268,8 +275,6 @@
 
     //    汉字
     function invertWord(img) {
-        // scale = 3
-        // numScale = 3;
         var imgW = img.width
         var imgH = img.height
         canvas.width = imgW * scale
@@ -279,13 +284,7 @@
         var img1 = context.getImageData(0, 0, imgW, imgH);
         var data = img1.data;
         canvas.width = imgW * scale
-            // context.rect(0, 0, imgW, imgH)
-            // context.fillStyle = "#fff0";
-            // context.fill();
-            // return
-            // console.log("==== data ", data)
-            // return
-            // 设置字体
+        
         context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
             // 设置颜色
         context.fillStyle = "#fff";
@@ -294,9 +293,7 @@
         // 设置垂直对齐方式
         context.textBaseline = "middle";
 
-        //A
-        var arr = ["一", "夜", "暴", "富"]
-            // arr = ["1", "8", "5", "5", "2", "6", "6", "1", "6", "8", "9"]
+        var arr = (document.getElementById("word").value || "一夜暴富").split('')
         var result = [];
         var height = scale * numScale / 2;
         var width = 0;
@@ -320,8 +317,6 @@
             context.fillStyle = hexify(r + "," + g + "," + b + "," + deepBGColor); //"#F00";
             context.fillRect(width - numScale * scale / 2, height - numScale * scale / 2, numScale * scale, numScale * scale);
 
-
-
             context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
             context.fillStyle = hexify(r + "," + g + "," + b);
             // 设置水平对齐方式
@@ -337,12 +332,9 @@
         document.getElementById("resultImage").src = canvas.toDataURL("image/" + imageType, parseFloat(saveType || "0.8"));
 
         canvas.height = 0
-        console.log("=========== count  ", count)
     }
     //    爱心
     function invertheart(img) {
-        // scale = 1;
-        // numScale = 4
         var imgW = img.width
         var imgH = img.height
         canvas.width = imgW * scale
@@ -352,11 +344,9 @@
         var img1 = context.getImageData(0, 0, imgW, imgH);
         var data = img1.data;
         canvas.width = imgW * scale
-            // console.log("==== data ", data)
-            // return
-            // 设置字体
+        // 设置字体
         context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
-            // 设置颜色
+        // 设置颜色
         context.fillStyle = "#000";
         // 设置水平对齐方式
         context.textAlign = "center";
@@ -371,9 +361,6 @@
         for (var i = 0, len = data.length; i < len; i += 4 * numScale) {
             var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
             var sum = 0;
-            // var r = 0;
-            // var g = 0;
-            // var b = 0;
             for (var j = 0; j < numScale; j++) {
                 sum += data[i + j * 4] + data[i + 1 + j * 4] + data[i + 2 + j * 4]
             }
@@ -403,12 +390,9 @@
 
 
         canvas.height = 0
-        console.log("=========== count  ", count)
     }
     //    黑白 字符串
     function invert(img) {
-        // scale = 2
-        // numScale = 3;
         var imgW = img.width
         var imgH = img.height
         canvas.width = imgW * scale
@@ -418,11 +402,9 @@
         var img1 = context.getImageData(0, 0, imgW, imgH);
         var data = img1.data;
         canvas.width = imgW * scale
-            // console.log("==== data ", data)
-            // return
-            // 设置字体
+        // 设置字体
         context.font = `${1 * numScale * scale}px normal 黑体` //"8px bold 黑体";
-            // 设置颜色
+        // 设置颜色
         context.fillStyle = "#000";
         // 设置水平对齐方式
         context.textAlign = "center";
@@ -430,8 +412,7 @@
         context.textBaseline = "middle";
 
         //A
-        var arr = ["M", "N", "H", "Q", "$", "O", "C", "?", "7", ">", "!", ":", "–", ".", " "];
-
+        var arr = ["M", "N", "H", "Q", "$", "O", "C", "?", "7", ">", "!", ":", "。", ".", " "];
         var result = [];
         var height = scale * numScale / 2;
         var width = 0;
@@ -463,7 +444,6 @@
             context.fillStyle = hexify(data[i] + "," + data[i + 1] + "," + data[i + 2]);
             if (color != "color") {
                 context.fillStyle = hexify(0 + "," + 0 + "," + 0 + "," + deepBGColor); //"#F00";
-                // context.fillStyle = "#000";
             }
             // 设置水平对齐方式
             context.fillText(arr[num], width, height);
@@ -479,24 +459,17 @@
 
 
         canvas.height = 0
-
-        console.log("=========== count  ", count)
     }
 
     // 保存
     function saveAsLocalImage() {
-        // var image = canvas.toDataURL("image/jpeg", parseFloat("0.6")).replace("image/jpeg", "image/octet-stream");
-        //window.location.href = image + "?name=ttt.jpeg"; // it will save locally 
         var url = document.getElementById("resultImage").src
         var a = document.createElement('a')
         var event = new MouseEvent('click')
 
         a.download = Date.now() || '图片名称'
         a.href = url
-        console.log("========  save ",url)
         a.dispatchEvent(event)
     }
-
-    //
     refreshUI(true)
 </script>
