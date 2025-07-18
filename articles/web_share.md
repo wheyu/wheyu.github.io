@@ -1,5 +1,5 @@
 # <div align="center">网站分享</div>
-  <span id='date'>2024-03-14</span>
+  <span id='date'>2025-07-18</span>
   <span class='key-tag'>分享</span><span class='key-tag'>网站</span>
   - - -
   
@@ -45,8 +45,8 @@
         <div>⭐⭐⭐⭐</div>
       </div>
     </div>
-<div class='web-item item' to='https://cz01.cc/'>
-      <img class='web-img' src='https://img.py1080p.com//2021/10/5c7a67356cec28.ico'/>
+<div class='web-item item' to='https://www.czzy77.com'>
+      <img class='web-img' src='https://www.czzy77.com/wp-content/uploads/2021/10/5c7a67356cec28.ico'/>
         <div class='web-detail mg-l-1'>
         <a target='_blank'>厂长视频</a>
         <div>⭐⭐⭐⭐</div>

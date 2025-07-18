@@ -7,7 +7,7 @@ async function start() {
   await DealWeb();
   await DealSoft();
   await DealConvertPath();
-  // console.log("dataJSON1 ====  ",dataJSON)
+  console.log("dataJSON1 ====  ",dataJSON)
   await fs.writeFileSync(`data.json`, JSON.stringify(dataJSON), { encoding: 'utf-8' })
 }
 
