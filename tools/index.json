@@ -1,0 +1,32 @@
+[
+  {
+    "name": "JSON 格式化工具",
+    "file": "json-formatter.html",
+    "description": "在线格式化和验证 JSON"
+  },
+  {
+    "name": "Base64 编解码",
+    "file": "base64.html",
+    "description": "Base64 编码和解码工具"
+  },
+  {
+    "name": "图片加水印",
+    "file": "图片加水印.html",
+    "description": "图片增加水印以保证安全"
+  },
+  {
+    "name": "图片变Ascii",
+    "file": "imgToAscii.html",
+    "description": "多种样式"
+  },
+  {
+    "name": "123网盘直链",
+    "file": "123网盘直链.html",
+    "description": "123网盘快速生成直连"
+  },
+  {
+    "name": "资源分享",
+    "file": "阿虚同学的储物间.html",
+    "description": "内容来自阿虚同学的储物间"
+  }
+]

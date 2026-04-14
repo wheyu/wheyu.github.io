@@ -1,0 +1,248 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="nginx的说明、使用示例"><title>nginx使用 - Wheyu的博客</title><base href="/"><link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="stylesheet" href="css/style.css"></head><body><header class="header"><div class="container header-content"><h1 class="logo"><a href="index.html">Wheyu的博客</a></h1><nav class="nav"><a href="index.html">列表</a> <a href="categories.html">分类</a> <a href="search.html">搜索</a> <a href="#" onclick="openTools(event)">工具</a> <a href="about.html">关于</a></nav></div></header><main class="container main-wrapper"><div class="main-content"><article class="post-content"><header class="post-header"><h1>nginx使用</h1><div class="post-meta"><time title="创建时间">2026-04-14</time> <span class="category-tag-list"><span class="category-tag">nginx</span> <span class="category-tag">技术</span> <span class="category-tag">运维</span> <span class="category-tag">后端</span></span></div></header><div class="post-body"><h2>简介</h2><p>Nginx是一个开源的Web服务器，同时Nginx也提供了反向代理和负载均衡的功能。 Nginx通常作为负载均衡器暴露在外网接受用户请求，同时也使用其反向代理的功能，将用户的请求转发到实际提供服务的内网服务器。</p><h2>官网</h2><ul><li>官网：<a href="http://nginx.org/">http://nginx.org/</a></li><li>官方下载地址：<a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></li></ul><h2>常用命令</h2><table><thead><tr><th>操作</th><th>Windows</th><th>Linux</th></tr></thead><tbody><tr><td>测试配置</td><td><code>nginx -t</code></td><td><code>sudo nginx -t</code></td></tr><tr><td>查看完整配置</td><td><code>nginx -T</code></td><td><code>sudo nginx -T</code></td></tr><tr><td>启动</td><td><code>start nginx</code></td><td><code>sudo systemctl start nginx</code></td></tr><tr><td>快速停止</td><td><code>nginx -s stop</code></td><td><code>sudo systemctl stop nginx</code></td></tr><tr><td>重载配置</td><td><code>nginx -s reload</code></td><td><code>sudo systemctl reload nginx</code></td></tr><tr><td>优雅停止</td><td><code>nginx -s quit</code></td><td><code>sudo nginx -s quit</code></td></tr><tr><td>查看进程</td><td><code>tasklist | findstr nginx</code></td><td><code>ps aux | grep nginx</code></td></tr><tr><td>查看状态</td><td>无原生命令</td><td><code>sudo systemctl status nginx</code></td></tr><tr><td>开机自启</td><td>需手动创建服务</td><td><code>sudo systemctl enable nginx</code></td></tr><tr><td>查看版本</td><td><code>nginx -v</code></td><td><code>nginx -v</code></td></tr><tr><td>查看编译参数</td><td><code>nginx -V</code></td><td><code>nginx -V</code></td></tr></tbody></table><h2>平台差异</h2><table><thead><tr><th>差异点</th><th>Windows</th><th>Linux</th></tr></thead><tbody><tr><td>权限要求</td><td>一般不需要管理员（端口&lt;1000除外）</td><td>常用命令需要 <code>sudo</code>（80/443端口需root）</td></tr><tr><td>服务管理</td><td>无内置服务管理器</td><td><code>systemctl</code> / <code>service</code> 命令管理</td></tr><tr><td>进程查看</td><td><code>tasklist</code></td><td><code>ps</code> / <code>top</code> / <code>htop</code></td></tr><tr><td>配置文件路径</td><td><code>conf\nginx.conf</code></td><td><code>/etc/nginx/nginx.conf</code></td></tr><tr><td>日志路径</td><td><code>logs\</code></td><td><code>/var/log/nginx/</code></td></tr><tr><td>换行符要求</td><td>支持 Windows(CRLF) 或 Linux(LF)</td><td>必须是 Linux(LF) 格式</td></tr><tr><td>全局命令</td><td>需 <code>cd</code> 到 Nginx 目录或配置环境变量</td><td>安装后自动全局可用</td></tr><tr><td>路径分隔符</td><td>反斜杠 <code>\</code> 或正斜杠 <code>/</code></td><td>正斜杠 <code>/</code></td></tr></tbody></table><h2>配置</h2><pre><code># ============================================
+# 1. 静态网页服务器
+# ============================================
+# 适用场景：传统多页面网站，每个URL对应一个真实的HTML文件
+# 访问: http://localhost:8080
+# 返回: [win] D:/myweb/index.html    [linux] /var/www/myweb/index.html
+# 访问: http://localhost:8080/about.html
+# 返回: [win] D:/myweb/about.html    [linux] /var/www/myweb/about.html
+# 访问: http://localhost:8080/about
+# 返回: 404 Not Found（因为不存在about这个文件）
+server {
+    listen 8080;
+    
+    location / {
+        root D:/myweb;                # [win] root D:/myweb    [linux] root /var/www/myweb
+        index index.html;            # 默认首页，访问/时返回index.html
+    }
+}
+</code></pre><pre><code># ============================================
+# 2. SPA单页应用（Vue/React路由支持）
+# ============================================
+# 适用场景：Vue/React等前端框架，只有一个HTML文件，前端自己管理路由
+# 访问: http://localhost:8080
+# 返回: [win] D:/dist/index.html    [linux] /var/www/dist/index.html
+# 访问: http://localhost:8080/about
+# 返回: [win] D:/dist/index.html（不是about.html，由前端路由显示about页面）
+# 访问: http://localhost:8080/user/123
+# 返回: [win] D:/dist/index.html（前端路由会解析/user/123并显示对应用户）
+server {
+    listen 8080;
+    
+    location / {
+        root D:/dist;                 # [win] root D:/dist    [linux] root /var/www/dist
+        # $uri = 请求的路径，如/about
+        # $uri/ = 把/about当做目录处理
+        # /index.html = 上面两个都不存在时，返回index.html
+        try_files $uri $uri/ /index.html;  # 关键：找不到文件就返回index.html
+    }
+}
+</code></pre><pre><code># ============================================
+# 3. 反向代理（路径不变）
+# ============================================
+# 适用场景：转发API请求到后端，不改变路径
+# 访问: http://localhost/api/user
+# 转发: http://backend.com/api/user
+# 访问: http://localhost/api/user/list
+# 转发: http://backend.com/api/user/list
+server {
+    location /api {
+        proxy_pass http://backend.com;        # 路径完整转发，/api保持不变
+    }
+}
+</code></pre><pre><code># ============================================
+# 4. 反向代理（剥离前缀，最常用）
+# ============================================
+# 适用场景：前端用/api前缀，后端接口没有这个前缀
+# 访问: http://localhost/api/user
+# 转发: http://backend.com/user（/api被剥离）
+# 访问: http://localhost/api/user/list
+# 转发: http://backend.com/user/list
+# 
+# 关键：proxy_pass末尾的斜杠/会剥离location中的路径
+server {
+    location /api/ {
+        proxy_pass http://backend.com/;       # 末尾斜杠 = 剥离/api
+        # 对比：没有斜杠 = 保留/api
+    }
+}
+</code></pre><pre><code># ============================================
+# 5. 反向代理（添加前缀）
+# ============================================
+# 适用场景：后端接口有前缀，前端请求没有
+# 访问: http://localhost/user
+# 转发: http://backend.com/api/user（添加了/api）
+# 访问: http://localhost/user/list
+# 转发: http://backend.com/api/user/list
+server {
+    location / {
+        # ^/(.*)$ 匹配整个路径，如user/list
+        # /api/$1 在前面加上/api，变成/api/user/list
+        rewrite ^/(.*)$ /api/$1 break;       # break表示停止重写，直接转发
+        proxy_pass http://backend.com;
+    }
+}
+</code></pre><pre><code># ============================================
+# 6. 跨域解决（前后端分离完整配置）
+# ============================================
+# 适用场景：前端和后端不同域名，浏览器会拦截跨域请求
+# 前端: http://localhost:8080（浏览器访问这个）
+# 后端: https://api.example.com（实际API地址）
+# 解决方案：让Nginx做中间人，前端请求同源的Nginx，Nginx转发到后端
+server {
+    listen 8080;
+    
+    # 前端静态文件
+    location / {
+        root D:/dist;                         # [win] D:/dist    [linux] /var/www/dist
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # 后端API转发
+    location /api/ {
+        proxy_pass https://api.example.com/;  # 转发到真实后端
+        
+        # 关键：修改Host，让后端知道请求的是哪个域名
+        proxy_set_header Host api.example.com;
+        
+        # 关键：修改Origin，让后端认为请求来自同源
+        proxy_set_header Origin https://api.example.com;
+        
+        # 可选：传递真实IP
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+</code></pre><pre><code># ============================================
+# 7. 301永久重定向
+# ============================================
+# 适用场景：网站改版，旧URL永久转移到新URL，搜索引擎会更新索引
+# 访问: http://localhost/old/page
+# 跳转: http://localhost/new/page（浏览器地址栏会变）
+# 访问: http://localhost/old/product/123
+# 跳转: http://localhost/new/product/123
+server {
+    location /old {
+        # ^/old(.*)$ 匹配/old后面的部分，如/page或/product/123
+        # /new$1 拼接成/new/page或/new/product/123
+        # permanent 表示301永久重定向
+        rewrite ^/old(.*)$ /new$1 permanent;
+    }
+}
+</code></pre><pre><code># ============================================
+# 8. 302临时重定向
+# ============================================
+# 适用场景：临时维护、活动页跳转，搜索引擎不会更新索引
+# 访问: http://localhost/temp
+# 跳转: http://localhost/new-temp（浏览器地址栏会变）
+server {
+    location /temp {
+        return 302 /new-temp;                  # 302临时跳转
+    }
+}
+</code></pre><pre><code># ============================================
+# 9. HTTP跳转HTTPS
+# ============================================
+# 适用场景：强制使用HTTPS访问，提高安全性
+# 访问: http://example.com
+# 跳转: https://example.com
+# 访问: http://example.com/about
+# 跳转: https://example.com/about
+server {
+    listen 80;
+    server_name example.com;
+    
+    # $server_name = example.com
+    # $request_uri = 原始请求路径，如/about
+    return 301 https://$server_name$request_uri;
+}
+</code></pre><pre><code># ============================================
+# 10. 负载均衡（多台服务器轮询）
+# ============================================
+# 适用场景：高并发场景，把请求分发到多台后端服务器
+# 访问: http://localhost/api
+# 转发: http://192.168.1.10:8080 或 http://192.168.1.11:8080（轮询）
+# backend是upstream名称，可以自定义，但是server中proxy_pass必须使用这个名称
+# server 192.168.1.10:8080 weight=5; 权重越大优先转发
+# server 192.168.1.12:8080 backup;    # 备份服务器（主都挂了才用）
+# server 192.168.1.10:8080 max_fails=3 fail_timeout=30s; 配置失败重试3次，失败30秒后重试
+# ip_hash(一客户端IP始终访问同一台服务器适用场景：需要保持会话（Session）的应用)
+# least_conn(分配给当前连接数最少的服务器适用场景：请求处理时间差异大)
+upstream backend {
+    # 默认啥没有就是轮询，可设置 ip_hash/least_conn
+    server 192.168.1.10:8080;      # 服务器1
+    server 192.168.1.11:8080;      # 服务器2
+}
+
+server {
+    location /api {
+        proxy_pass http://backend;          # 轮询转发
+    }
+}
+</code></pre><pre><code># ============================================
+# 11. 静态资源缓存
+# ============================================
+# 适用场景：图片、CSS、JS等不常变化的文件，缓存到浏览器
+# 访问: http://localhost/css/style.css
+# 返回: 文件 + 告诉浏览器缓存30天
+# 访问: http://localhost/（HTML）
+# 返回: 文件 + 告诉浏览器不缓存（每次都重新请求）
+server {
+    # 匹配css、js、png等静态文件
+    location ~* \.(css|js|png|jpg|svg)$ {
+        root D:/dist;                 # [win] D:/dist    [linux] /var/www/dist
+        expires 30d;                 # 缓存30天，浏览器再次访问直接用缓存
+        add_header Cache-Control &quot;public, immutable&quot;;
+    }
+    
+    # HTML文件不缓存
+    location / {
+        root D:/dist;
+        expires -1;                  # -1表示立即过期，每次都重新请求
+        add_header Cache-Control &quot;no-cache&quot;;
+    }
+}
+</code></pre><pre><code># ============================================
+# 12. Gzip压缩
+# ============================================
+# 适用场景：压缩文本类响应，减少传输大小，加快网页加载
+# 作用：CSS、JS、JSON等文件压缩后体积减少60-80%
+http {
+    gzip on;                         # 开启压缩
+    gzip_types text/css application/javascript application/json;
+    # 只压缩这些类型：CSS、JS、JSON
+    gzip_min_length 1024;            # 大于1KB的文件才压缩
+    gzip_comp_level 6;               # 压缩级别1-9，6是性能和压缩比的平衡
+    gzip_vary on;                    # 添加Vary: Accept-Encoding头
+}
+</code></pre><pre><code># ============================================
+# 13. IP白名单限制
+# ============================================
+# 适用场景：只允许特定IP访问管理后台
+# ip是8*4 32位（二进制）  后面/8 表示前8位不变
+# 访问: http://localhost/admin
+# 允许: 192.168.1.100，其他IP返回403
+server {
+    location /admin {
+        allow 192.168.1.100;         # 允许的IP
+        allow 10.0.0.0/8;            # 允许10.x.x.x整个网段
+        deny all;                    # 拒绝其他所有IP
+        proxy_pass http://backend;
+    }
+}
+</code></pre><pre><code># ============================================
+# 14. WebSocket代理
+# ============================================
+# 适用场景：聊天、实时推送等WebSocket连接
+# 访问: ws://localhost/ws
+# 转发: ws://backend-server:8080
+server {
+    location /ws {
+        proxy_pass http://backend-server:8080;
+        proxy_http_version 1.1;               # WebSocket需要HTTP/1.1
+        proxy_set_header Upgrade $http_upgrade;    # 升级协议
+        proxy_set_header Connection &quot;upgrade&quot;;     # 连接升级
+        proxy_set_header Host $host;
+    }
+}
+</code></pre></div></article><aside class="sidebar"><div class="widget categories-widget"><h3>分类</h3><div class="category-list"><a href="category/技术.html">技术 <span style="color:var(--text-secondary)">(2)</span></a> <a href="category/分享.html">分享 <span style="color:var(--text-secondary)">(2)</span></a> <a href="category/随笔.html">随笔 <span style="color:var(--text-secondary)">(2)</span></a> <a href="category/nginx.html">nginx <span style="color:var(--text-secondary)">(1)</span></a> <a href="category/运维.html">运维 <span style="color:var(--text-secondary)">(1)</span></a> <a href="category/后端.html">后端 <span style="color:var(--text-secondary)">(1)</span></a> <a href="category/网站.html">网站 <span style="color:var(--text-secondary)">(1)</span></a> <a href="category/视频.html">视频 <span style="color:var(--text-secondary)">(1)</span></a> <a href="category/Web.html">Web <span style="color:var(--text-secondary)">(1)</span></a></div></div></aside></div><a href="index.html" class="back-button-float" title="返回"><svg t="1691547287523" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5169" width="128" height="128"><path d="M336.457143 336.457143m-336.457143 0a336.457143 336.457143 0 1 0 672.914286 0 336.457143 336.457143 0 1 0-672.914286 0Z" fill="#8CF6FB" p-id="5170"></path><path d="M512 1024C229.668571 1024 0 794.331429 0 512S229.668571 0 512 0s512 229.668571 512 512-229.668571 512-512 512z m0-950.857143C269.165714 73.142857 73.142857 269.165714 73.142857 512s196.022857 438.857143 438.857143 438.857143 438.857143-196.022857 438.857143-438.857143S754.834286 73.142857 512 73.142857z" fill="#3C2DCB" p-id="5171"></path><path d="M640.731429 340.845714L469.577143 512l171.154286 171.154286c14.628571 14.628571 14.628571 38.034286 0 51.2-14.628571 14.628571-38.034286 14.628571-51.2 0L392.045714 538.331429c-14.628571-14.628571-14.628571-38.034286 0-51.2l196.022857-196.022858c14.628571-14.628571 38.034286-14.628571 51.2 0 14.628571 13.165714 14.628571 36.571429 1.462858 49.737143z" fill="#D098FF" p-id="5172"></path></svg></a></main><footer class="footer"><div class="container"><p>&copy; 2024 Wheyu的博客. All rights reserved.</p></div></footer><button class="category-float-btn" onclick="openCategoryModal()" title="分类">📑</button><div id="category-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeCategoryModal()">&times;</span><h2>分类</h2><div id="category-modal-list" class="category-list"></div></div></div><div id="tools-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeTools()">&times;</span><h2>工具箱</h2><div id="tools-list" class="tools-list"></div></div></div><script src="js/main.js" defer="defer"></script><script src="js/spa-router.js" defer="defer"></script></body></html>
